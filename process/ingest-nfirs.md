@@ -1,9 +1,9 @@
-1. Upload data
+# 1. Upload data
    From local data source
    ```
    scp NFIRS.zip <user>@<vm-ip>:~
    ```
-2. Unzip data
+# 2. Unzip data  
    Install unzip with `sudo apt-get install -y unzip`
    ```
    cd ~
