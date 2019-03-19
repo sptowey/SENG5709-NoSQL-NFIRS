@@ -1,0 +1,34 @@
+{
+  "type":"index",
+  "spec":{
+    "dataSchema":{
+      "dataSource":"NFIRS_General_Incident_Information_New_Schema",
+      "parser":{
+        "type":"string",
+        "parseSpec": {
+          "format" : "csv",
+          "timestampSpec" : {
+            "column" : "inc_date"
+          },
+          "hasHeaderRow" : true,
+          "dimensionsSpec" : {
+            "dimensions" : ["state","state_definition","fdid","inc_date","inc_date_unparsed","inc_no","exp_no","version","dept_sta","inc_type","inc_type_definition","add_wild","aid","aid_definition","alarm","alarm_unparsed","arrival","arrival_unparsed","inc_cont","inc_cont_unparsed","lu_clear","lu_clear_unparsed","shift","alarms","district","act_tak1","act_tak1_definition","act_tak2","act_tak2_definition","act_tak3","act_tak3_definition","app_mod","sup_app","ems_app","oth_app","sup_per","ems_per","oth_per","resou_aid","prop_loss","cont_loss","prop_val","cont_val","ff_death","oth_death","ff_inj","oth_inj","det_alert","det_alert_definition","haz_rel","haz_rel_definition","mixed_use","mixed_use_definition","prop_use","prop_use_definition","census"]
+          }
+        }
+      },
+      "metricsSpec":[],
+      "granularitySpec":{
+        "type":"uniform"
+      },
+      "transformSpec" : null
+    },
+    "ioConfig":{
+      "type":"index",
+      "firehose":{
+        "type":"local",
+        "filter":"GeneralIncidentInformation2014.csv",
+        "baseDir":"/home/towey016/NFIRS"
+      }
+    }
+  }
+}
