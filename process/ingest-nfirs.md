@@ -10,3 +10,4 @@
    mkdir NFIRS
    unzip -d NFIRS/ NFIRS.zip
    ```
+# 3. Ingest data with json ingestion script
