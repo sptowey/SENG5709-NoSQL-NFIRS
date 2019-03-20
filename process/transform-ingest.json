@@ -1,0 +1,57 @@
+{
+  "type":"index",
+  "spec":{
+    "dataSchema":{
+      "dataSource":"NFIRS_General_Incident_Information_Abbriviated_Schema",
+      "parser":{
+        "type":"string",
+        "parseSpec": {
+          "format" : "csv",
+          "timestampSpec" : {
+            "column" : "inc_date_pad",
+            "format":"MMddyyyy"
+          },
+          "hasHeaderRow" : true,
+          "dimensionsSpec" : {
+            "dimensions" : [
+              "state",
+              {"name":"fdid", "type":"long"},
+              "inc_date",
+              {"name":"inc_no", "type":"long"},
+              {"name":"inc_type", "type":"long"},
+              {"name":"alarm", "type":"long"},
+              {"name":"arrival", "type":"long"},
+              {"name":"inc_cont", "type":"long"},
+              {"name":"prop_loss", "type":"long"},
+              {"name":"prop_val", "type":"long"},
+              {"name":"ff_death", "type":"long"},
+              {"name":"oth_death", "type":"long"},
+              "inc_date_pad"
+            ]
+          }
+        }
+      },
+      "metricsSpec":[],
+      "granularitySpec":{
+        "type":"uniform"
+      },
+      "transformSpec" : {
+        "transforms": [
+          {
+            "type": "expression",
+            "name": "inc_date_pad",
+            "expression": "if(strlen(inc_date) == 7, concat('0',inc_date), inc_date)"
+          }
+        ]
+      }
+    },
+    "ioConfig":{
+      "type":"index",
+      "firehose":{
+        "type":"local",
+        "filter":"General2009OneLine.csv",
+        "baseDir":"/home/towey016/"
+      }
+    }
+  }
+}
