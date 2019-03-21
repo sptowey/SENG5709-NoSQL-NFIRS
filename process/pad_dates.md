@@ -5,3 +5,4 @@ Install pandas with `pip install pandas`
 Run [Date Pad script](https://github.com/sptowey/SENG5709-NoSQL-NFIRS/blob/master/process/pad9-11.py) : `python pad9-11.py`
 
 # For Detailed Incident
+Run [Date Pad script](https://github.com/sptowey/SENG5709-NoSQL-NFIRS/blob/master/process/pad9-11_Detailed.py) : `python pad9-11_Detailed.py`
