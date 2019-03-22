@@ -2,8 +2,14 @@
 ## 3.1.3.1 Easy Questions
 - What are the min, max, and average Fire Service Deaths  
    - Query Fire Service Deaths columnn (`ff_death`)  
+   - `select min(ff_death), max(ff_death), avg(ff_death) from "NFIRS_General_Incident_Information";`
+   - `-1, 5, 0`  
+   - `select min(ff_death), max(ff_death), avg(cast(ff_death as double)) from "NFIRS_General_Incident_Information";`
+   - `??? query error` 
 - How many different incident types are there  
    - Aggregate over indident types (`inc_type`)  
+   - `select count(distinct inc_type) from "NFIRS_General_Incident_Information";`  
+   - `74`  
 - Were fire incidents reported in all 50 states each year?  
    - Count distinct states (`state`, `inc_type`)
 - What is the min, max and average time between the time the alarm was sounded and the fire was controlled.  
