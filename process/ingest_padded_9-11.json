@@ -1,0 +1,47 @@
+{
+  "type": "index",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "NFIRS_General_Incident_Information",
+      "parser": {
+        "type": "string",
+        "parseSpec": {
+          "format": "csv",
+          "timestampSpec": {
+            "column": "inc_date",
+            "format": "MMddyyyy"
+          },
+          "hasHeaderRow": true,
+          "dimensionsSpec": {
+            "dimensions": [
+              "state",
+              { "name": "fdid", "type": "long" },
+              { "name": "inc_no", "type": "long" },
+              { "name": "inc_type", "type": "long" },
+              { "name": "alarm", "type": "long" },
+              { "name": "arrival", "type": "long" },
+              { "name": "inc_cont", "type": "long" },
+              { "name": "prop_loss", "type": "long" },
+              { "name": "prop_val", "type": "long" },
+              { "name": "ff_death", "type": "long" },
+              { "name": "oth_death", "type": "long" }
+            ]
+          }
+        }
+      },
+      "metricsSpec": [],
+      "granularitySpec": {
+        "type": "uniform"
+      },
+      "transformSpec": null
+    },
+    "ioConfig": {
+      "type": "index",
+      "firehose": {
+        "type": "local",
+        "filter": "General*Pad.csv",
+        "baseDir": "/home/towey016/NFIRS/"
+      }
+    }
+  }
+}
