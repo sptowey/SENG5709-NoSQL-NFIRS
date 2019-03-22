@@ -12,17 +12,14 @@ base_dir = '~/druid/NFIRS/'
 years = ['2009','2010','2011']
 file_name = 'DetailedIncidentInformation'
 file_ext = '.csv'
+count = 0
 
 for year in years:
     full_file_no_ext = os.path.join(base_dir, file_name+year)
     print('Processing {0}'.format(full_file_no_ext))
 
     df = pd.read_csv(full_file_no_ext+file_ext)
-    
     df['inc_date'] = df['inc_date'].map(pad8)
-   # df['alarm'] = df['alarm'].map(pad12)
-    #df['arrival'] = df['arrival'].map(pad12)
-    #df['inc_cont'] = df['inc_cont'].map(pad12)
-    #df['lu_clear'] = df['lu_clear'].map(pad12)
-    
     df.to_csv(full_file_no_ext + '-Pad' + file_ext)
+    count = count + 1
+print('Completed ' + '{}'.format(count) + ' files')
