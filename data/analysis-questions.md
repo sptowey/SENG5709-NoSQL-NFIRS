@@ -341,10 +341,18 @@
 |WY|2014|2649|
 
 - Which fire department responded to the most incidents? Least?  
-   - Group by fire department id, get min and max count (`fdid`)
-   - Get fire department name from Fire Departments table (different file)
+   - Group by fire department id, get min and max count (`fdid`)  - **need to rerun after re-import fdid as string**  
+   - Get fire department name from Fire Departments table (different file)  - **redo and rerun after denormalizing**
+   - `select fdid, count(fdid) from "NFIRS_General_Incident_Information" group by fdid order by count(fdid) limit 1;`  
+   - `select fdid, count(fdid) from "NFIRS_General_Incident_Information" where fdid <> 0 group by fdid order by count(fdid) desc limit 1;`  
+   - Turns out `fdid` is no unique. Might be unique per state
+   - `select state, fdid, count(fdid) from "NFIRS_General_Incident_Information" group by (state, fdid) order by count(*) limit 1;`  
+   - `OR, 00031, 1` - many more with 1
+   - `select state, fdid, count(*) from "NFIRS_General_Incident_Information" where fdid <> 0 group by (state, fdid) order by count(*) desc limit 1;`  
+   - `NY, 24001, 424430`
 - Which state(s) had the most Fire Service Deaths each year?  
-   - Group by state, count fire service deaths (`state`,`ff_death`)
+   - Group by state, count fire service deaths (`state`,`ff_death`)  
+   - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year** 
 - Which incident type is most common in each state? Least common?  
    - Group by state and incident type, get min and max count (`state`,`inc_type`)
 - How many civilians were killed in fires each year? Total over all years?  
