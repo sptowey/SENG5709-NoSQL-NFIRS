@@ -11,6 +11,7 @@ base_dir = '~/NFIRS/'
 years = ['2009','2010','2011']
 file_name = 'GeneralIncidentInformation'
 file_ext = '.csv'
+count = 0
 
 for year in years:
     full_file_no_ext = os.path.join(base_dir, file_name+year)
@@ -25,3 +26,6 @@ for year in years:
     df['lu_clear'] = df['lu_clear'].map(pad12)
     
     df.to_csv(full_file_no_ext + '-Pad' + file_ext)
+    count = count + 1
+    
+print('Completed ' + '{}'.format(count) + ' files')
