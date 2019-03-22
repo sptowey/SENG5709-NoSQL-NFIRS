@@ -354,10 +354,25 @@
    - Group by state, count fire service deaths (`state`,`ff_death`)  
    - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year** 
 - Which incident type is most common in each state? Least common?  
-   - Group by state and incident type, get min and max count (`state`,`inc_type`)
+   - Group by state and incident type, get min and max count (`state`,`inc_type`)  
+   - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **same problem as last query**
 - How many civilians were killed in fires each year? Total over all years?  
-   - Aggregate civilian deaths by year, and count (`oth_death`)
-   - Count total
+   - Aggregate civilian deaths by year, and count (`oth_death`)  
+   - `select floor(__time to year), sum(oth_death) from "NFIRS_General_Incident_Information" group by floor(__time to year) order by floor(__time to year);`  
+   
+|year|count|
+|----|-----|
+|2009|1929|
+|2010|2063|
+|2011|2082|
+|2012|1963|
+|2013|1943|
+|2014|2150|
+
+   - Count total  
+   - `select sum(oth_death) from "NFIRS_General_Incident_Information";`  
+   - `12130`
+   
 - How many arson cases are still open for each fire department?  
    - Check for arson factor and closed status and count (Arson file, `fdid`,`case_stat`)
 - Which are the top 5 fire departments that didn’t report property loss (had the most null values in that column)?  
