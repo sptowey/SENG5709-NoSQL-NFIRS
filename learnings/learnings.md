@@ -13,4 +13,4 @@ This is a pain in the butt!! First to do SQL everything must be exact and if you
 
 ## Ingestion Limitations
 Ingesting the entire spark-processed dataset caused a timeout to occur. Solved by ingesting 0000, 0001, 0002, 0003 separatly. Maybe looking for a timeout configuration could be useful?
-While there are 3 indexing services enabled by default, it seems that only one task can insert into a datasource at a time. So, while trying to run 0000-0003 concurrently into the same datasource, all but one would fail, forcing serial execution.
+While there are 3 indexing services enabled by default, it seems that only one task can insert into a datasource at a time. So, while trying to run 0000-0003 concurrently into the same datasource, all but one would fail, forcing serial execution. However, the subsequent tasks executed much quicker.
