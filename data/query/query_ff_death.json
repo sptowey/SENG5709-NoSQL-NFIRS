@@ -14,8 +14,8 @@
       "name": "average",
       "fn": "/",
       "fields": [
-        { "type": "fieldAccess", "name": "Total_Rows", "fieldName": "rows" },
-        { "type": "fieldAccess", "name": "Sum_FF_Deaths", "fieldName": "Sum_FireFighter_Deaths" }
+        { "type": "fieldAccess", "name": "Sum_FF_Deaths", "fieldName": "Sum_FireFighter_Deaths" },
+        { "type": "fieldAccess", "name": "Total_Rows", "fieldName": "rows" }
       ]
     }
   ],
