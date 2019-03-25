@@ -1,5 +1,7 @@
 Adapted from Medium's Intalling Scala and Spark article (https://medium.com/@josemarcialportilla/installing-scala-and-spark-on-ubuntu-5665ee4b62b1)
 
+*All commands should be run from the user's home directory.
+
 1. Make sure Java is installed (see druid-install.md for more info)
 2. Update packages
 
