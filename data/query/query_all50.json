@@ -8,7 +8,9 @@
   "aggregations": [
     {
       "type": "cardinality",
-      "fields": ["state"]
+      "name":"Count states with incidents",
+      "fields": ["state"],
+      "round":true
     }
   ],
   "context":{"skipEmptyBuckets": true}
