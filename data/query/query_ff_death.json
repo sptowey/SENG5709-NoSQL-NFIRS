@@ -1,6 +1,6 @@
 {
   "queryType": "groupBy",
-  "dataSource": "NFIRS_Detailed_Incident_Information_2012",
+  "dataSource": "NFIRS_General_Incident_Information",
   "granularity": "all",
   "dimensions": [],
   "aggregations": [
@@ -17,7 +17,7 @@
         { "type": "fieldAccess", "name": "Total_Rows", "fieldName": "rows" },
         { "type": "fieldAccess", "name": "Sum_FF_Deaths", "fieldName": "Sum_FireFighter_Deaths" }
       ]
-    },
+    }
   ],
   "intervals": ["2009-01-01/2014-12-31"]
 }
