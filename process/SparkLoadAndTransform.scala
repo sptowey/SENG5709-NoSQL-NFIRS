@@ -1,9 +1,9 @@
  import org.apache.spark.sql.SQLContext
  val sqlContext = new SQLContext(sc)
 
-val generalIncidents2009 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("NFIRS/GeneralIncidentInformation2009.csv")
-val generalIncidents2010 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("NFIRS/GeneralIncidentInformation2010.csv")
-val generalIncidents2011 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("NFIRS/GeneralIncidentInformation2011.csv")
+val generalIncidents2009 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("../../NFIRS/GeneralIncidentInformation2009.csv")
+val generalIncidents2010 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("../../NFIRS/GeneralIncidentInformation2010.csv")
+val generalIncidents2011 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("../../NFIRS/GeneralIncidentInformation2011.csv")
 
 val combinedIncidentsOldFormatDf = generalIncidents2009.union(generalIncidents2010).union(generalIncidents2011)
 val combinedIncidentsOldFormatFixedDatesDf = combinedIncidentsOldFormatDf
@@ -20,9 +20,9 @@ val combinedIncidentsOldFormattedDateDf = combinedIncidentsOldFormatFixedDatesDf
     .withColumn("inc_cont", to_timestamp($"inc_cont", "MMddyyyyhhmm"))
     .withColumn("lu_clear", to_timestamp($"lu_clear", "MMddyyyyhhmm"))
 
-val generalIncidents2012 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("NFIRS/GeneralIncidentInformation2012.csv")
-val generalIncidents2013 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("NFIRS/GeneralIncidentInformation2013.csv")
-val generalIncidents2014 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("NFIRS/GeneralIncidentInformation2014.csv")
+val generalIncidents2012 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("../../NFIRS/GeneralIncidentInformation2012.csv")
+val generalIncidents2013 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("../../NFIRS/GeneralIncidentInformation2013.csv")
+val generalIncidents2014 = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load("../../NFIRS/GeneralIncidentInformation2014.csv")
 
 val combinedIncidentsNewFormatDf = generalIncidents2012.union(generalIncidents2013).union(generalIncidents2014)
 
@@ -61,3 +61,5 @@ combinedIncidentsNewFinalDf.count
 val combinedIncidentsAllYearsDf = combinedIncidentsOldFinalDf.union(combinedIncidentsNewFinalDf);
 combinedIncidentsAllYearsDf.select($"inc_date", $"alarm", $"arrival", $"inc_cont", $"lu_clear").show()
 combinedIncidentsAllYearsDf.count
+
+combinedIncidentsAllYearsDf.write.csv("../../sparkNfirs/combinedIncidentsAllYears")
