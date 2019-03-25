@@ -1,0 +1,23 @@
+{
+  "queryType": "groupBy",
+  "dataSource": "NFIRS_General_Incident_Information",
+  "granularity": "all",
+  "dimensions": [],
+  "aggregations": [
+    {"type": "count", "name": "rows"},
+    {"type": "longMin", "name": "Min_FireFighter_Deaths", "fieldName": "ff_death"},
+    {"type": "longMax", "name": "Max_FireFighter_Deaths", "fieldName": "ff_death"},
+    {"type": "longSum", "name": "Sum_FireFighter_Deaths", "fieldName": "ff_death"}
+  ],
+  "postAggregations": [
+    {"type": "arithmetic",
+      "name": "average",
+      "fn": "/",
+      "fields": [
+        { "type": "fieldAccess", "name": "Sum_FF_Deaths", "fieldName": "Sum_FireFighter_Deaths" },
+        { "type": "fieldAccess", "name": "Total_Rows", "fieldName": "rows" }
+      ]
+    }
+  ],
+  "intervals": ["2009-01-01/2014-12-31"]
+}

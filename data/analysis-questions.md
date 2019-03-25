@@ -6,10 +6,12 @@
    - `-1, 5, 0`  
    - `select min(ff_death), max(ff_death), avg(cast(ff_death as double)) from "NFIRS_General_Incident_Information";`
    - `??? query error` 
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_ff_death.json http://localhost:8082/druid/v2?pretty`
 - How many different incident types are there  
    - Aggregate over indident types (`inc_type`)  
    - `select count(distinct inc_type) from "NFIRS_General_Incident_Information";`  
    - `74`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_count_incident_types.json http://localhost:8082/druid/v2?pretty`
 - Were fire incidents reported in all 50 states each year?  
    - Count distinct states (`state`)
    - `select count(distinct state) from "NFIRS_General_Incident_Information";`  
