@@ -18,6 +18,12 @@
    - `55`
    - `select distinct state from "NFIRS_General_Incident_Information";`  
    - 54 rows... Also includes `DC`, `NA` (N/A?), `PR`, `null`. Doesn't really add up
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2009.json http://localhost:8082/druid/v2?pretty` 54  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2010.json http://localhost:8082/druid/v2?pretty` 53  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2011.json http://localhost:8082/druid/v2?pretty` 53  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2012.json http://localhost:8082/druid/v2?pretty` 53  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2013.json http://localhost:8082/druid/v2?pretty` 52  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2014.json http://localhost:8082/druid/v2?pretty` 53  
 - What is the min, max and average time between the time the alarm was sounded and the fire was controlled.  
    - Aggregate over difference between columns (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
    - TODO
@@ -25,7 +31,8 @@
 ## 3.1.3.2 Moderately Difficult Questions
 - How many fires were there in each state per year?  
    - Group by State, count (`state`)  
-   - `select state, floor(__time to year), count(*) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by state, floor(__time to year);`
+   - `select state, floor(__time to year), count(*) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by state, floor(__time to year);`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_fires_per_state_per_year_old.json http://localhost:8082/druid/v2?pretty` - TODO - years are formatted as longs  
 
 |state|year|count|
 |-----|----|-----|
