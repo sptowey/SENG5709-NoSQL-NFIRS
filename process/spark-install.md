@@ -1,4 +1,4 @@
-Adapted from Medium's Intalling Scala and Spark article (https://medium.com/@josemarcialportilla/installing-scala-and-spark-on-ubuntu-5665ee4b62b1)
+Adapted from Medium's Intalling Scala and Spark article (https://medium.com/@josemarcialportilla/installing-scala-and-spark-on-ubuntu-5665ee4b62b1) and sbt documentation (https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
 
 *All commands should be run from the user's home directory.
 
@@ -30,4 +30,12 @@ export __JAVA_OPTIONS='-Xmx8096M -Xms512M'
 ./spark-shell --driver-memory 8g
 println("Spark shell is running")
 Ctrl+C
+```
+6. Install sbt
+
+```
+echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+sudo apt-get update
+sudo apt-get install sbt
 ```
