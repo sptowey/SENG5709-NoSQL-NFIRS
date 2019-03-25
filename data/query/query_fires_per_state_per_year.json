@@ -7,7 +7,7 @@
       "type": "expression",
       "name": "d1:v",
       "expression": "timestamp_floor(\"__time\",'P1Y',null,'UTC')",
-      "outputType": "LONG"
+      "outputType": "STRING"
     }
   ],
   "granularity":"all",
@@ -22,30 +22,30 @@
       "type": "default",
       "dimension": "d1:v",
       "outputName": "Year",
-      "outputType": "LONG"
+      "outputType": "STRING"
     }
   ],
   "aggregations": [
     {
       "type": "count",
-      "name": "Fires Count"
+      "name": "Fires"
     }
   ],
   "limitSpec": {
     "type": "default",
     "columns": [
       {
-        "dimension": "state",
+        "dimension": "State",
         "direction": "ascending",
         "dimensionOrder": {
           "type": "lexicographic"
         }
       },
       {
-        "dimension": "d1:v",
+        "dimension": "Year",
         "direction": "ascending",
         "dimensionOrder": {
-          "type": "numeric"
+          "type": "lexicographic"
         }
       }
     ]
