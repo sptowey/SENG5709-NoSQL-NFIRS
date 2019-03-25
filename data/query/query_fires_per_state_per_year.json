@@ -1,0 +1,53 @@
+{
+  "queryType": "groupBy",
+  "dataSource":"NFIRS_General_Incident_Information",
+  "intervals":["2009-01-01/2014-12-31"],
+  "virtualColumns": [
+    {
+      "type": "expression",
+      "name": "d1:v",
+      "expression": "timestamp_floor(\"__time\",'P1Y',null,'UTC')",
+      "outputType": "LONG"
+    }
+  ],
+  "granularity":"all",
+  "dimensions": [
+    {
+      "type": "default",
+      "dimension": "state",
+      "outputName": "State",
+      "outputType": "STRING"
+    },
+    {
+      "type": "default",
+      "dimension": "d1:v",
+      "outputName": "Year",
+      "outputType": "LONG"
+    }
+  ],
+  "aggregations": [
+    {
+      "type": "count",
+      "name": "Fires Count"
+    }
+  ],
+  "limitSpec": {
+    "type": "default",
+    "columns": [
+      {
+        "dimension": "state",
+        "direction": "ascending",
+        "dimensionOrder": {
+          "type": "lexicographic"
+        }
+      },
+      {
+        "dimension": "d1:v",
+        "direction": "ascending",
+        "dimensionOrder": {
+          "type": "numeric"
+        }
+      }
+    ]
+  }
+}
