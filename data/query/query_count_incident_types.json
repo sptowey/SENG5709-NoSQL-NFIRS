@@ -1,7 +1,7 @@
 {
   "queryType":"timeseries",
   "dataSource":"NFIRS_General_Incident_Information",
-  "intervals": ["2009-01-01/2014-12-31"]
+  "intervals": ["2009-01-01/2014-12-31"],
   "aggregations":[
     {
       "type":"cardinality",
