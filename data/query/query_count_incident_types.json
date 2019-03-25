@@ -1,0 +1,15 @@
+{
+  "queryType":"timeseries",
+  "dataSource":"NFIRS_General_Incident_Information",
+  "intervals": ["2009-01-01/2014-12-31"]
+  "aggregations":[
+    {
+      "type":"cardinality",
+      "name":"Count Incident Types",
+      "fields":[
+        {"type":"default","dimension":"inc_type","outputName":"inc_type","outputType":"LONG"}
+      ],
+      "byRow":false,
+      "round":true}
+  ]
+}
