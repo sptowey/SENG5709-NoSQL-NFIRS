@@ -14,7 +14,7 @@ cd scala
 mkdir nfirs
 ```
 4. Copy the build.sbt file from this repository into the nfirs-build directory.
-5. Copy the SparkLoadAndTransform file from this repository into the nfirs-build/src/main/scala/nfirs directory.
+5. Copy the SparkLoadAndTransform.scala file from this repository into the nfirs-build/src/main/scala/nfirs directory.
 6. From the nfirs-build directory run the following command:
 
 ```sbt package```
