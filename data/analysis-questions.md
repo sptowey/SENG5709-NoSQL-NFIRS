@@ -354,20 +354,24 @@
    - Get fire department name from Fire Departments table (different file)  - **redo and rerun after denormalizing**
    - `select fdid, count(fdid) from "NFIRS_General_Incident_Information" group by fdid order by count(fdid) limit 1;`  
    - `select fdid, count(fdid) from "NFIRS_General_Incident_Information" where fdid <> 0 group by fdid order by count(fdid) desc limit 1;`  
-   - Turns out `fdid` is no unique. Might be unique per state
+   - Turns out `fdid` is not unique. Might be unique per state
    - `select state, fdid, count(fdid) from "NFIRS_General_Incident_Information" group by (state, fdid) order by count(*) limit 1;`  
    - `OR, 00031, 1` - many more with 1
    - `select state, fdid, count(*) from "NFIRS_General_Incident_Information" where fdid <> 0 group by (state, fdid) order by count(*) desc limit 1;`  
-   - `NY, 24001, 424430`
+   - `NY, 24001, 424430`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_busi_dept.json http://localhost:8082/druid/v2?pretty`
 - Which state(s) had the most Fire Service Deaths each year?  
    - Group by state, count fire service deaths (`state`,`ff_death`)  
-   - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year** 
+   - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
+   - added to git (replace with curl)
 - Which incident type is most common in each state? Least common?  
    - Group by state and incident type, get min and max count (`state`,`inc_type`)  
-   - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **same problem as last query**
+   - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **similar problem as last query, but can't solve with timespans**  
+   - added to git (replace with curl)
 - How many civilians were killed in fires each year? Total over all years?  
    - Aggregate civilian deaths by year, and count (`oth_death`)  
    - `select floor(__time to year), sum(oth_death) from "NFIRS_General_Incident_Information" group by floor(__time to year) order by floor(__time to year);`  
+   - added to git (replace with curl)  
    
 |year|count|
 |----|-----|
@@ -380,7 +384,8 @@
 
    - Count total  
    - `select sum(oth_death) from "NFIRS_General_Incident_Information";`  
-   - `12130`
+   - `12130`  
+   - added to git (replace with curl)
    
 - How many arson cases are still open for each fire department?  
    - Check for arson factor and closed status and count (Arson file, `fdid`,`case_stat`)
