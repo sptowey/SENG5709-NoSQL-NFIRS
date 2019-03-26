@@ -1,6 +1,6 @@
 {
   "queryType": "groupBy",
-  "dataSource": "NFIRS_General_Incident_Information",
+  "dataSource": "NFIRS_General_Incident_Information_Spark",
   "granularity": "all",
   "dimensions": [],
   "aggregations": [
