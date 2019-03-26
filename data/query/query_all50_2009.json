@@ -2,7 +2,7 @@
   "queryType": "timeseries",
   "dataSource":"NFIRS_General_Incident_Information",
   "intervals":[
-    "2009-01-01/2009-12-31"
+    "2009-01-01/2009-12-31T23:59:59.999Z"
   ],
   "granularity": "all",
   "aggregations": [
