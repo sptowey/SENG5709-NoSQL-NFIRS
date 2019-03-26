@@ -1,0 +1,63 @@
+{
+  "queryType": "groupBy",
+  "dataSource": {
+    "type": "table",
+    "name": "NFIRS_General_Incident_Information_Spark"
+  },
+  "intervals": {
+    "type": "intervals",
+    "intervals": [
+      "-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z"
+    ]
+  },
+  "virtualColumns": [],
+  "filter": {
+    "type": "not",
+    "field": {
+      "type": "selector",
+      "dimension": "fdid",
+      "value": "0",
+      "extractionFn": null
+    }
+  },
+  "granularity": {
+    "type": "all"
+  },
+  "dimensions": [
+    {
+      "type": "default",
+      "dimension": "state",
+      "outputName": "d0",
+      "outputType": "STRING"
+    },
+    {
+      "type": "default",
+      "dimension": "fdid",
+      "outputName": "d1",
+      "outputType": "STRING"
+    }
+  ],
+  "aggregations": [
+    {
+      "type": "count",
+      "name": "a0"
+    }
+  ],
+  "postAggregations": [],
+  "having": null,
+  "limitSpec": {
+    "type": "default",
+    "columns": [
+      {
+        "dimension": "a0",
+        "direction": "descending",
+        "dimensionOrder": {
+          "type": "numeric"
+        }
+      }
+    ],
+    "limit": 1
+  },
+  "context": {},
+  "descending": false
+}
