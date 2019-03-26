@@ -1,0 +1,30 @@
+{
+  "queryType": "timeseries",
+  "dataSource": {
+    "type": "table",
+    "name": "NFIRS_General_Incident_Information_Spark"
+  },
+  "intervals": {
+    "type": "intervals",
+    "intervals": [
+      "-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z"
+    ]
+  },
+  "descending": false,
+  "virtualColumns": [],
+  "filter": null,
+  "granularity": "YEAR",
+  "aggregations": [
+    {
+      "type": "longSum",
+      "name": "a0",
+      "fieldName": "oth_death",
+      "expression": null
+    }
+  ],
+  "postAggregations": [],
+  "limit": 2147483647,
+  "context": {
+    "skipEmptyBuckets": true
+  }
+}
