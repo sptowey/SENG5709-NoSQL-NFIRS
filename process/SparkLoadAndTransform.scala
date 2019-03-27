@@ -13,6 +13,7 @@ import org.apache.spark.sql.functions._
         val joinExpression = generalIncidents.col("fdid") === fireDepartmentsReducedColumns.col("fdid") && generalIncidents.col("state") === fireDepartmentsReducedColumns("state")
         val joinType = "left_outer"
         val generalIncidentsWithFD = generalIncidents.join(fireDepartmentsReducedColumns, joinExpression, joinType)
+            .drop(fireDepartmentsReducedColumns.col("fdid")).drop(fireDepartmentsReducedColumns.col("state"))
 
         return generalIncidentsWithFD;
     }
