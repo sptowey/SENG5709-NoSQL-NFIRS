@@ -420,7 +420,21 @@
    - Group by state (`state`)
    - Get number of minutes between sounded and contained (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
    - Get sums of relevent columns and divide by sum of minutes (`prop_loss`,`ff_death`,`oth_death`,`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
-   - `select state, [post aggregations?]  from "NFIRS_General_Incident_Information_Spark" group by state;`
+   - `select state, [post aggregations?]  from "NFIRS_General_Incident_Information_Spark" group by state;`  
+   - `select`  
+`state,`  
+`sum(prop_loss)/(sum(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60)),`  
+`sum(ff_death)/(sum(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60)),`  
+`sum(oth_death)/(sum(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60))`  
+`from "NFIRS_General_Incident_Information_Spark"`  
+`where alarm is not null and inc_cont is not null`  
+`and TIME_PARSE(inc_cont) < TIME_PARSE('2015-01-01T00:00:00')`  
+`and TIME_PARSE(inc_cont) >= TIME_PARSE('2009-01-01T00:00:00')`  
+`and TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)) > 0`  
+`and prop_loss is not null and prop_loss > 0`  
+`group by state;`  
+   - Deaths are too low to show on a per minute scale (and that's a good thing!)
+   - `curl -X 'POST' -H 'Content-Type:application/jso-d @query_stats_per_minute_by_state.json http://localhost:8082/druid/v2?pretty`
    
 - What is the most common Emergency Medical Services treatment for each type of incident?  
    - Group by EMS treatment (additional file) and incident type. Get max count (EMS file; `inc_type` by join to general by `inc_no`; `proc_use1`,`proc_use2`,`proc_use3`...`proc_use25` - these are like checkboxes, either filled with their number or nothing)
