@@ -7,7 +7,7 @@
       "type": "expression",
       "name": "d1:v",
       "expression": "timestamp_floor(\"__time\",'P1Y',null,'UTC')",
-      "outputType": "LONG"
+      "outputType": "String"
     }
   ],
   "granularity":"all",
@@ -15,20 +15,20 @@
     {
       "type": "default",
       "dimension": "state",
-      "outputName": "d0",
+      "outputName": "State",
       "outputType": "STRING"
     },
     {
       "type": "default",
       "dimension": "d1:v",
-      "outputName": "d1",
-      "outputType": "LONG"
+      "outputName": "Year",
+      "outputType": "String"
     }
   ],
   "aggregations": [
     {
       "type": "longSum",
-      "name": "a0",
+      "name": "Fire Fighter Deaths",
       "fieldName": "ff_death",
       "expression": null
     }
@@ -37,13 +37,13 @@
     "type": "default",
     "columns": [
       {
-        "dimension": "a0",
+        "dimension": "Fire Fighter Deaths",
         "direction": "descending",
         "dimensionOrder": {
           "type": "numeric"
         }
       }
     ],
-    "limit": 6
+    "limit": 1
   }
 }

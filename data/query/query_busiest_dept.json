@@ -16,27 +16,27 @@
     {
       "type": "default",
       "dimension": "state",
-      "outputName": "d0",
+      "outputName": "State",
       "outputType": "STRING"
     },
     {
       "type": "default",
       "dimension": "fdid",
-      "outputName": "d1",
+      "outputName": "FDID",
       "outputType": "STRING"
     }
   ],
   "aggregations": [
     {
       "type": "count",
-      "name": "a0"
+      "name": "Incident Count"
     }
   ],
   "limitSpec": {
     "type": "default",
     "columns": [
       {
-        "dimension": "a0",
+        "dimension": "Incident Count",
         "direction": "descending",
         "dimensionOrder": {
           "type": "numeric"
