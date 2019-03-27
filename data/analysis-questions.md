@@ -18,14 +18,37 @@
    - `55`
    - `select distinct state from "NFIRS_General_Incident_Information";`  
    - 54 rows... Also includes `DC`, `NA` (N/A?), `PR`, `null`. Doesn't really add up
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2009.json http://localhost:8082/druid/v2?pretty` 54  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2010.json http://localhost:8082/druid/v2?pretty` 53  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2011.json http://localhost:8082/druid/v2?pretty` 53  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2012.json http://localhost:8082/druid/v2?pretty` 53  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2013.json http://localhost:8082/druid/v2?pretty` 52  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2014.json http://localhost:8082/druid/v2?pretty` 53  
 - What is the min, max and average time between the time the alarm was sounded and the fire was controlled.  
    - Aggregate over difference between columns (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
-   - TODO
+   - `select` 
+`min(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60),`  
+`max(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60),`  
+`avg(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60)`  
+`from "NFIRS_General_Incident_Information_Spark" where alarm is not null and inc_cont is not null`  
+`and TIME_PARSE(inc_cont) < TIME_PARSE('2015-01-01T00:00:00') and TIME_PARSE(inc_cont) >= TIME_PARSE('2009-01-01T00:00:00')`  
+`and TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)) > 0`  
+`limit 10;`  
+   - This query was hard because the data was so messy. The query required many filters to make sense. Also converted from milliseconds to minutes  
+   - `curl -X 'POST' -H 'Content-Type:application/jso-d @query_time_to_control.json http://localhost:8082/druid/v2?pretty`
+
+|min|max|avg|
+|---|---|---|
+|1|527128|59|
+   
+   
+   
 
 ## 3.1.3.2 Moderately Difficult Questions
 - How many fires were there in each state per year?  
    - Group by State, count (`state`)  
-   - `select state, floor(__time to year), count(*) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by state, floor(__time to year);`
+   - `select state, TIME_EXTRACT(__time, 'YEAR'), count(*) from "NFIRS_General_Incident_Information" group by state, TIME_EXTRACT(__time, 'YEAR') order by state, TIME_EXTRACT(__time, 'YEAR');`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_fires_per_state_per_year_old.json http://localhost:8082/druid/v2?pretty` - TODO - years are formatted as longs  
 
 |state|year|count|
 |-----|----|-----|
@@ -347,20 +370,30 @@
    - Get fire department name from Fire Departments table (different file)  - **redo and rerun after denormalizing**
    - `select fdid, count(fdid) from "NFIRS_General_Incident_Information" group by fdid order by count(fdid) limit 1;`  
    - `select fdid, count(fdid) from "NFIRS_General_Incident_Information" where fdid <> 0 group by fdid order by count(fdid) desc limit 1;`  
-   - Turns out `fdid` is no unique. Might be unique per state
+   - Turns out `fdid` is not unique. Might be unique per state
    - `select state, fdid, count(fdid) from "NFIRS_General_Incident_Information" group by (state, fdid) order by count(*) limit 1;`  
    - `OR, 00031, 1` - many more with 1
    - `select state, fdid, count(*) from "NFIRS_General_Incident_Information" where fdid <> 0 group by (state, fdid) order by count(*) desc limit 1;`  
-   - `NY, 24001, 424430`
+   - `NY, 24001, 424430`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_busiest_dept.json http://localhost:8082/druid/v2?pretty`
 - Which state(s) had the most Fire Service Deaths each year?  
    - Group by state, count fire service deaths (`state`,`ff_death`)  
-   - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year** 
+   - `select state, TIME_EXTRACT(__time, 'YEAR'), sum(ff_death) from "NFIRS_General_Incident_Information_Spark" group by state, TIME_EXTRACT(__time, 'YEAR') order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2009.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2010.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2011.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2012.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2013.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2014.json http://localhost:8082/druid/v2?pretty`  
 - Which incident type is most common in each state? Least common?  
    - Group by state and incident type, get min and max count (`state`,`inc_type`)  
-   - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **same problem as last query**
+   - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **similar problem as last query, but can't solve with timespans**  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_most_common_incident_per_state.json http://localhost:8082/druid/v2?pretty`
 - How many civilians were killed in fires each year? Total over all years?  
    - Aggregate civilian deaths by year, and count (`oth_death`)  
-   - `select floor(__time to year), sum(oth_death) from "NFIRS_General_Incident_Information" group by floor(__time to year) order by floor(__time to year);`  
+   - `select floor(__time to year), sum(oth_death) from "NFIRS_General_Incident_Information_Spark" group by floor(__time to year) order by floor(__time to year);`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_count_civilian_deaths_per_year.json http://localhost:8082/druid/v2?pretty` 
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_total_civilian_deaths.json http://localhost:8082/druid/v2?pretty`   
    
 |year|count|
 |----|-----|
@@ -373,18 +406,22 @@
 
    - Count total  
    - `select sum(oth_death) from "NFIRS_General_Incident_Information";`  
-   - `12130`
+   - `12130`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_total_civilian_deaths.json http://localhost:8082/druid/v2?pretty`   
    
 - How many arson cases are still open for each fire department?  
    - Check for arson factor and closed status and count (Arson file, `fdid`,`case_stat`)
 - Which are the top 5 fire departments that didn’t report property loss (had the most null values in that column)?  
    - Group by fire departments, count nulls (`fdid`,`prop_loss`)
+   - `select fdid from "NFIRS_General_Incident_Information_Spark" where prop_loss is null;` returns 0 rows - probably because that's how column family databases work  
 
 ## 3.1.3.3 Challenging Questions
 - What is average property damage, fire service deaths, and civilian deaths per minute between when the fire alarm was sounded and when the fire was contained for each state?  
    - Group by state (`state`)
    - Get number of minutes between sounded and contained (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
-   - Get sums of relevent columns and divide by sum of minutes (`prop_loss`,`ff_death`,`oth_death`,`alarm`, maybe `alarm_unparsed`, `inc_cont`)
+   - Get sums of relevent columns and divide by sum of minutes (`prop_loss`,`ff_death`,`oth_death`,`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
+   - `select state, [post aggregations?]  from "NFIRS_General_Incident_Information_Spark" group by state;`
+   
 - What is the most common Emergency Medical Services treatment for each type of incident?  
    - Group by EMS treatment (additional file) and incident type. Get max count (EMS file; `inc_type` by join to general by `inc_no`; `proc_use1`,`proc_use2`,`proc_use3`...`proc_use25` - these are like checkboxes, either filled with their number or nothing)
 

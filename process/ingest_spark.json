@@ -2,7 +2,7 @@
   "type": "index",
   "spec": {
     "dataSchema": {
-      "dataSource": "NFIRS_General_Incident_Information_Combined",
+      "dataSource": "NFIRS_General_Incident_Information_Spark",
       "parser": {
         "type": "string",
         "parseSpec": {
@@ -12,7 +12,7 @@
             "format": "auto"
           },
           "hasHeaderRow": false,
-          "columns":["state","fdid","inc_date","inc_no","exp_no","version","dept_sta","inc_type","add_wild","aid","alarm","arrival","inc_cont","lu_clear","shift","alarms","district","act_tak1","act_tak2","act_tak3","app_mod","sup_app","ems_app","oth_app","sup_per","ems_per","oth_per","resou_aid","prop_loss","cont","_loss","prop_val","cont_val","ff_death","oth_death","ff_inj","oth_inj","det_alert","haz_rel","mixed_use","prop_use","census"],
+          "columns":["state","fdid","inc_date","inc_no","exp_no","version","dept_sta","inc_type","add_wild","aid","alarm","arrival","inc_cont","lu_clear","shift","alarms","district","act_tak1","act_tak2","act_tak3","app_mod","sup_app","ems_app","oth_app","sup_per","ems_per","oth_per","resou_aid","prop_loss","cont_loss","prop_val","cont_val","ff_death","oth_death","ff_inj","oth_inj","det_alert","haz_rel","mixed_use","prop_use","census"],
           "dimensionsSpec": {
             "dimensions": [
               "state",

@@ -1,0 +1,17 @@
+{
+  "queryType": "timeseries",
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals":[
+    "2011-01-01/2011-12-31T23:59:59.999Z"
+  ],
+  "granularity": "all",
+  "aggregations": [
+    {
+      "type": "cardinality",
+      "name":"Count states with incidents",
+      "fields": ["state"],
+      "round":true
+    }
+  ],
+  "context":{"skipEmptyBuckets": true}
+}

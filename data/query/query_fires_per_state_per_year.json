@@ -1,0 +1,53 @@
+{
+  "queryType": "groupBy",
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals":["2009-01-01/2014-12-31T23:59:59.999Z"],
+  "virtualColumns": [
+    {
+      "type": "expression",
+      "name": "d1:v",
+      "expression": "timestamp_extract(\"__time\",'YEAR','UTC')",
+      "outputType": "STRING"
+    }
+  ],
+  "granularity":"all",
+  "dimensions": [
+    {
+      "type": "default",
+      "dimension": "state",
+      "outputName": "State",
+      "outputType": "STRING"
+    },
+    {
+      "type": "default",
+      "dimension": "d1:v",
+      "outputName": "Year",
+      "outputType": "STRING"
+    }
+  ],
+  "aggregations": [
+    {
+      "type": "count",
+      "name": "Fires"
+    }
+  ],
+  "limitSpec": {
+    "type": "default",
+    "columns": [
+      {
+        "dimension": "State",
+        "direction": "ascending",
+        "dimensionOrder": {
+          "type": "lexicographic"
+        }
+      },
+      {
+        "dimension": "Year",
+        "direction": "ascending",
+        "dimensionOrder": {
+          "type": "lexicographic"
+        }
+      }
+    ]
+  }
+}

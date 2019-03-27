@@ -1,0 +1,18 @@
+{
+  "queryType": "timeseries",
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals": ["2009-01-01/2014-12-31T23:59:59.999Z"],
+  "granularity":"all",
+  "descending": false,
+  "aggregations": [
+    {
+      "type": "longSum",
+      "name": "a0",
+      "fieldName": "oth_death",
+      "expression": null
+    }
+  ],
+  "context": {
+    "skipEmptyBuckets": true
+  }
+}

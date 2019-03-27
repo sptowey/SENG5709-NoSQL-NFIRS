@@ -1,0 +1,35 @@
+{
+  "queryType": "groupBy",
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals": ["2013-01-01/2013-12-31T23:59:59.999Z"],
+  "granularity":"all",
+  "dimensions": [
+    {
+      "type": "default",
+      "dimension": "state",
+      "outputName": "State",
+      "outputType": "STRING"
+    }
+  ],
+  "aggregations": [
+    {
+      "type": "longSum",
+      "name": "Fire Fighter Deaths",
+      "fieldName": "ff_death",
+      "expression": null
+    }
+  ],
+  "limitSpec": {
+    "type": "default",
+    "columns": [
+      {
+        "dimension": "Fire Fighter Deaths",
+        "direction": "descending",
+        "dimensionOrder": {
+          "type": "numeric"
+        }
+      }
+    ],
+    "limit": 1
+  }
+}

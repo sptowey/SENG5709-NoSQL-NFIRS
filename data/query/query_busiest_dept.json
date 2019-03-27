@@ -1,0 +1,48 @@
+{
+  "queryType": "groupBy",
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals": ["2009-01-01/2014-12-31T23:59:59.999Z"],
+  "filter": {
+    "type": "not",
+    "field": {
+      "type": "selector",
+      "dimension": "fdid",
+      "value": "0",
+      "extractionFn": null
+    }
+  },
+  "granularity":"all",
+  "dimensions": [
+    {
+      "type": "default",
+      "dimension": "state",
+      "outputName": "State",
+      "outputType": "STRING"
+    },
+    {
+      "type": "default",
+      "dimension": "fdid",
+      "outputName": "FDID",
+      "outputType": "STRING"
+    }
+  ],
+  "aggregations": [
+    {
+      "type": "count",
+      "name": "Incident Count"
+    }
+  ],
+  "limitSpec": {
+    "type": "default",
+    "columns": [
+      {
+        "dimension": "Incident Count",
+        "direction": "descending",
+        "dimensionOrder": {
+          "type": "numeric"
+        }
+      }
+    ],
+    "limit": 1
+  }
+}

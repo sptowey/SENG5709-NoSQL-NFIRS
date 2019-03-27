@@ -1,0 +1,39 @@
+{
+  "queryType": "groupBy",
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals": ["2009-01-01/2014-12-31T23:59:59.999Z"],
+  "granularity":"all",
+  "dimensions": [
+    {
+      "type": "default",
+      "dimension": "state",
+      "outputName": "d0",
+      "outputType": "STRING"
+    },
+    {
+      "type": "default",
+      "dimension": "inc_type",
+      "outputName": "d1",
+      "outputType": "STRING"
+    }
+  ],
+  "aggregations": [
+    {
+      "type": "count",
+      "name": "a0"
+    }
+  ],
+  "limitSpec": {
+    "type": "default",
+    "columns": [
+      {
+        "dimension": "a0",
+        "direction": "descending",
+        "dimensionOrder": {
+          "type": "numeric"
+        }
+      }
+    ],
+    "limit": 5
+  }
+}

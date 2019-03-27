@@ -1,6 +1,6 @@
 {
   "queryType": "groupBy",
-  "dataSource": "NFIRS_General_Incident_Information",
+  "dataSource": "NFIRS_General_Incident_Information_Spark",
   "granularity": "all",
   "dimensions": [],
   "aggregations": [
@@ -19,5 +19,5 @@
       ]
     }
   ],
-  "intervals": ["2009-01-01/2014-12-31"]
+  "intervals": ["2009-01-01/2014-12-31T23:59:59.999Z"]
 }
