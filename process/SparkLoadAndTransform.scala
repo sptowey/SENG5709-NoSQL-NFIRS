@@ -1,8 +1,22 @@
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.DataFrame;
 import org.apache.spark;
 import org.apache.spark.sql.functions._
  
  object SparkLoadAndTransform extends Serializable {
+    
+    def loadGeneralIncidentDfFromCsv(sqlContext: SQLContext, generalIncidentsFilePath: String, fireDepartmentsFilePath: String) : DataFrame = {       
+        val generalIncidents = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(generalIncidentsFilePath)
+        val fireDepartments = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(fireDepartmentsFilePath)
+        val fireDepartmentsReducedColumns = fireDepartments.select(col("state"), col("fdid"), col("fd_name")).distinct()
+        val joinExpression = generalIncidents.col("fdid") === fireDepartmentsReducedColumns.col("fdid") && generalIncidents.col("state") === fireDepartmentsReducedColumns("state")
+        val joinType = "left_outer"
+        val generalIncidentsWithFD = generalIncidents.join(fireDepartmentsReducedColumns, joinExpression, joinType)
+
+        return generalIncidentsWithFD;
+    }
+
      def main(args: Array[String]) = {
 
         val pathToDataFolder = args(0)
@@ -11,9 +25,9 @@ import org.apache.spark.sql.functions._
         val spark = SparkSession.builder().appName("NFIRS Load and Transform").getOrCreate()
         import spark.implicits._
 
-        val generalIncidents2009 = spark.sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(pathToDataFolder + "NFIRS/GeneralIncidentInformation2009.csv")
-        val generalIncidents2010 = spark.sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(pathToDataFolder + "NFIRS/GeneralIncidentInformation2010.csv")
-        val generalIncidents2011 = spark.sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(pathToDataFolder + "NFIRS/GeneralIncidentInformation2011.csv")
+        val generalIncidents2009 = loadGeneralIncidentDfFromCsv(spark.sqlContext, pathToDataFolder + "NFIRS/GeneralIncidentInformation2009.csv", pathToDataFolder + "NFIRS/FireDepartments2009.csv")
+        val generalIncidents2010 = loadGeneralIncidentDfFromCsv(spark.sqlContext, pathToDataFolder + "NFIRS/GeneralIncidentInformation2010.csv", pathToDataFolder + "NFIRS/FireDepartments2010.csv")
+        val generalIncidents2011 = loadGeneralIncidentDfFromCsv(spark.sqlContext, pathToDataFolder + "NFIRS/GeneralIncidentInformation2011.csv", pathToDataFolder + "NFIRS/FireDepartments2011.csv")
 
         val combinedIncidentsOldFormatDf = generalIncidents2009.union(generalIncidents2010).union(generalIncidents2011)
         val combinedIncidentsOldFormatFixedDatesDf = combinedIncidentsOldFormatDf
@@ -30,14 +44,11 @@ import org.apache.spark.sql.functions._
             .withColumn("inc_cont", to_timestamp($"inc_cont", "MMddyyyyhhmm"))
             .withColumn("lu_clear", to_timestamp($"lu_clear", "MMddyyyyhhmm"))
 
-        val generalIncidents2012 = spark.sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(pathToDataFolder + "NFIRS/GeneralIncidentInformation2012.csv")
-        val generalIncidents2013 = spark.sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(pathToDataFolder + "NFIRS/GeneralIncidentInformation2013.csv")
-        val generalIncidents2014 = spark.sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(pathToDataFolder + "NFIRS/GeneralIncidentInformation2014.csv")
-
+        val generalIncidents2012 = loadGeneralIncidentDfFromCsv(spark.sqlContext, pathToDataFolder + "NFIRS/GeneralIncidentInformation2012.csv", pathToDataFolder + "NFIRS/FireDepartments2012.csv")
+        val generalIncidents2013 = loadGeneralIncidentDfFromCsv(spark.sqlContext, pathToDataFolder + "NFIRS/GeneralIncidentInformation2013.csv", pathToDataFolder + "NFIRS/FireDepartments2013.csv")
+        val generalIncidents2014 = loadGeneralIncidentDfFromCsv(spark.sqlContext, pathToDataFolder + "NFIRS/GeneralIncidentInformation2014.csv", pathToDataFolder + "NFIRS/FireDepartments2014.csv")
+        
         val combinedIncidentsNewFormatDf = generalIncidents2012.union(generalIncidents2013).union(generalIncidents2014)
-
-        combinedIncidentsNewFormatDf.select($"inc_date", $"alarm", $"arrival", $"inc_cont", $"lu_clear").show()
-        combinedIncidentsNewFormatDf.count
 
         val oldFormatColumnNames =  combinedIncidentsOldFormatDf.schema.names
         val newFormatColumnNames = combinedIncidentsNewFormatDf.schema.names
@@ -46,8 +57,6 @@ import org.apache.spark.sql.functions._
         val columnsInNewButNotOldFormat = newFormatColumnNames.diff(oldFormatColumnNames)
 
         val combinedIncidentsOldFinalDf = combinedIncidentsOldFormattedDateDf.drop("serialid");
-        combinedIncidentsOldFinalDf.select($"inc_date", $"alarm", $"arrival", $"inc_cont", $"lu_clear").show()
-        combinedIncidentsOldFinalDf.count
 
         val combinedIncidentsNewFinalDf = combinedIncidentsNewFormatDf
             .drop("state_definition")
@@ -65,13 +74,9 @@ import org.apache.spark.sql.functions._
             .drop("haz_rel_definition")
             .drop("mixed_use_definition")
             .drop("prop_use_definition")      
-        combinedIncidentsNewFinalDf.select($"inc_date", $"alarm", $"arrival", $"inc_cont", $"lu_clear").show()
-        combinedIncidentsNewFinalDf.count
 
         val combinedIncidentsAllYearsDf = combinedIncidentsOldFinalDf.union(combinedIncidentsNewFinalDf);
-        combinedIncidentsAllYearsDf.select($"inc_date", $"alarm", $"arrival", $"inc_cont", $"lu_clear").show()
-        combinedIncidentsAllYearsDf.count
 
-        combinedIncidentsAllYearsDf.write.csv(pathToDataFolder + "sparkNfirs/combinedIncidentsAllYears")
+        combinedIncidentsAllYearsDf.write.option("header", "true").csv(pathToDataFolder + "sparkNfirs/combinedIncidentsAllYears")
     }
 }
