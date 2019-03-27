@@ -9,4 +9,4 @@ Druid is not for the faint of heart as the SQL interface, DSQL is very finiky. T
 Once the data was ingested we started asking our questions: https://github.com/sptowey/SENG5709-NoSQL-NFIRS/blob/master/data/analysis-questions.md
 The SQL and the results are captured there. We also started porting all of the SQL queries to a json query, which are kept here: https://github.com/sptowey/SENG5709-NoSQL-NFIRS/tree/master/data/query
 
-The documentation for Druid even adds more angst as the examples are incomplete and often not very helpful. 
+The documentation for Druid even adds more angst as the examples are incomplete and often not very helpful. That is why we created a learnings folder to capture all of the woes that we encountered. https://github.com/sptowey/SENG5709-NoSQL-NFIRS/blob/master/learnings/learnings.md
