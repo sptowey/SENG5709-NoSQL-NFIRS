@@ -16,3 +16,6 @@ As it turns out, using `explain plan for <dsql query>` generates an (overly verb
 Ingesting the entire spark-processed dataset caused a timeout to occur. Solved by ingesting 0000, 0001, 0002, 0003 separatly. Maybe looking for a timeout configuration could be useful?
 While there are 3 indexing services enabled by default, it seems that only one task can insert into a datasource at a time. So, while trying to run 0000-0003 concurrently into the same datasource, all but one would fail, forcing serial execution. However, the subsequent tasks executed much quicker.  
 Also had an issue with column definitions on spark ingest - without auto columns, messed up with the column order and had bizzarre data for ff_death.
+
+## Ingesting Issues
+Through numerous attempts to load Druid, Steve and I finally have similar row counts.  Though these are short from the original or source total. We are unsure of why the data doesn't match. 
