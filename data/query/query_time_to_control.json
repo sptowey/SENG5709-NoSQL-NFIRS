@@ -83,19 +83,19 @@
     },
     {
       "type": "expression",
-      "name": "p0",
+      "name": "Min Time in Minutes",
       "expression": "(\"a0\" / 60000)",
       "ordering": null
     },
     {
       "type": "expression",
-      "name": "p1",
+      "name": "Max Time in Minutes",
       "expression": "(\"a1\" / 60000)",
       "ordering": null
     },
     {
       "type": "expression",
-      "name": "p2",
+      "name": "Average Time in Minutes",
       "expression": "(\"a2\" / 60000)",
       "ordering": null
     }
