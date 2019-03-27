@@ -1,30 +1,16 @@
 {
-  "queryType": "topN",
+  "queryType": "groupBy",
   "dataSource": {
     "type": "table",
     "name": "NFIRS_General_Incident_Information_Spark"
   },
-  "virtualColumns": [],
-  "dimension": {
-    "type": "default",
-    "dimension": "state",
-    "outputName": "d0",
-    "outputType": "STRING"
-  },
-  "metric": {
-    "type": "dimension",
-    "previousStop": null,
-    "ordering": {
-      "type": "lexicographic"
-    }
-  },
-  "threshold": 10,
   "intervals": {
     "type": "intervals",
     "intervals": [
       "-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z"
     ]
   },
+  "virtualColumns": [],
   "filter": {
     "type": "and",
     "fields": [
@@ -39,6 +25,18 @@
       {
         "type": "expression",
         "expression": "((timestamp_parse(\"inc_cont\") - timestamp_parse(\"alarm\")) > 0)"
+      },
+      {
+        "type": "bound",
+        "dimension": "prop_loss",
+        "lower": "0",
+        "upper": null,
+        "lowerStrict": true,
+        "upperStrict": false,
+        "extractionFn": null,
+        "ordering": {
+          "type": "numeric"
+        }
       },
       {
         "type": "not",
@@ -63,6 +61,14 @@
   "granularity": {
     "type": "all"
   },
+  "dimensions": [
+    {
+      "type": "default",
+      "dimension": "state",
+      "outputName": "d0",
+      "outputType": "STRING"
+    }
+  ],
   "aggregations": [
     {
       "type": "longSum",
@@ -74,7 +80,7 @@
       "type": "longSum",
       "name": "a1",
       "fieldName": null,
-      "expression": "(timestamp_parse(\"inc_cont\") - (timestamp_parse(\"alarm\") / 60000))"
+      "expression": "(timestamp_parse(\"inc_cont\") - timestamp_parse(\"alarm\"))"
     },
     {
       "type": "longSum",
@@ -93,22 +99,26 @@
     {
       "type": "expression",
       "name": "p0",
-      "expression": "(\"a0\" / \"a1\")",
+      "expression": "(\"a0\" / (\"a1\" / 60000))",
       "ordering": null
     },
     {
       "type": "expression",
       "name": "p1",
-      "expression": "(\"a2\" / \"a1\")",
+      "expression": "(\"a2\" / (\"a1\" / 60000))",
       "ordering": null
     },
     {
       "type": "expression",
       "name": "p2",
-      "expression": "(\"a3\" / \"a1\")",
+      "expression": "(\"a3\" / (\"a1\" / 60000))",
       "ordering": null
     }
   ],
+  "having": null,
+  "limitSpec": {
+    "type": "NoopLimitSpec"
+  },
   "context": {},
   "descending": false
 }
