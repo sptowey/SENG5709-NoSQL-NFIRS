@@ -1,15 +1,7 @@
 {
   "queryType": "groupBy",
-  "dataSource": {
-    "type": "table",
-    "name": "NFIRS_General_Incident_Information_Spark"
-  },
-  "intervals": {
-    "type": "intervals",
-    "intervals": [
-      "-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z"
-    ]
-  },
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals": ["2009-01-01/2014-12-31T23:59:59.999Z"],
   "virtualColumns": [
     {
       "type": "expression",
@@ -18,10 +10,7 @@
       "outputType": "LONG"
     }
   ],
-  "filter": null,
-  "granularity": {
-    "type": "all"
-  },
+  "granularity":"all",
   "dimensions": [
     {
       "type": "default",
@@ -44,8 +33,6 @@
       "expression": null
     }
   ],
-  "postAggregations": [],
-  "having": null,
   "limitSpec": {
     "type": "default",
     "columns": [
@@ -58,7 +45,5 @@
       }
     ],
     "limit": 6
-  },
-  "context": {},
-  "descending": false
+  }
 }
