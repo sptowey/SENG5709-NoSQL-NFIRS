@@ -26,12 +26,28 @@
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2014.json http://localhost:8082/druid/v2?pretty` 53  
 - What is the min, max and average time between the time the alarm was sounded and the fire was controlled.  
    - Aggregate over difference between columns (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
-   - TODO
+   - `select` 
+`min(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60),`  
+`max(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60),`  
+`avg(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60)`  
+`from "NFIRS_General_Incident_Information_Spark" where alarm is not null and inc_cont is not null`  
+`and TIME_PARSE(inc_cont) < TIME_PARSE('2015-01-01T00:00:00') and TIME_PARSE(inc_cont) >= TIME_PARSE('2009-01-01T00:00:00')`  
+`and TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)) > 0`  
+`limit 10;`  
+   - This query was hard because the data was so messy. The query required many filters to make sense. Also converted from milliseconds to minutes  
+   - `curl -X 'POST' -H 'Content-Type:application/jso-d @query_time_to_control.json http://localhost:8082/druid/v2?pretty`
+
+|min|max|avg|
+|---|---|---|
+|1|527128|59|
+   
+   
+   
 
 ## 3.1.3.2 Moderately Difficult Questions
 - How many fires were there in each state per year?  
    - Group by State, count (`state`)  
-   - `select state, floor(__time to year), count(*) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by state, floor(__time to year);`  
+   - `select state, TIME_EXTRACT(__time, 'YEAR'), count(*) from "NFIRS_General_Incident_Information" group by state, TIME_EXTRACT(__time, 'YEAR') order by state, TIME_EXTRACT(__time, 'YEAR');`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_fires_per_state_per_year_old.json http://localhost:8082/druid/v2?pretty` - TODO - years are formatted as longs  
 
 |state|year|count|
@@ -362,7 +378,7 @@
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_busiest_dept.json http://localhost:8082/druid/v2?pretty`
 - Which state(s) had the most Fire Service Deaths each year?  
    - Group by state, count fire service deaths (`state`,`ff_death`)  
-   - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information_Spark" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
+   - `select state, TIME_EXTRACT(__time, 'YEAR'), sum(ff_death) from "NFIRS_General_Incident_Information_Spark" group by state, TIME_EXTRACT(__time, 'YEAR') order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2009.json http://localhost:8082/druid/v2?pretty`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2010.json http://localhost:8082/druid/v2?pretty`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2011.json http://localhost:8082/druid/v2?pretty`  
