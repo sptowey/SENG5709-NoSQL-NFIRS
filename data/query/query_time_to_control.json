@@ -1,0 +1,104 @@
+{
+  "queryType": "timeseries",
+  "dataSource":"NFIRS_General_Incident_Information_Spark",
+  "intervals": ["2009-01-01/2014-12-31T23:59:59.999Z"],
+  "filter": {
+    "type": "and",
+    "fields": [
+      {
+        "type": "expression",
+        "expression": "(timestamp_parse(\"inc_cont\") < 1420070400000)"
+      },
+      {
+        "type": "expression",
+        "expression": "(timestamp_parse(\"inc_cont\") >= 1230768000000)"
+      },
+      {
+        "type": "expression",
+        "expression": "((timestamp_parse(\"inc_cont\") - timestamp_parse(\"alarm\")) > 0)"
+      },
+      {
+        "type": "not",
+        "field": {
+          "type": "selector",
+          "dimension": "alarm",
+          "value": null,
+          "extractionFn": null
+        }
+      },
+      {
+        "type": "not",
+        "field": {
+          "type": "selector",
+          "dimension": "inc_cont",
+          "value": null,
+          "extractionFn": null
+        }
+      }
+    ]
+  },
+  "granularity":"all",
+  "aggregations": [
+    {
+      "type": "longMin",
+      "name": "a0",
+      "fieldName": null,
+      "expression": "(timestamp_parse(\"inc_cont\") - timestamp_parse(\"alarm\"))"
+    },
+    {
+      "type": "longMax",
+      "name": "a1",
+      "fieldName": null,
+      "expression": "(timestamp_parse(\"inc_cont\") - timestamp_parse(\"alarm\"))"
+    },
+    {
+      "type": "longSum",
+      "name": "a2:sum",
+      "fieldName": null,
+      "expression": "(timestamp_parse(\"inc_cont\") - timestamp_parse(\"alarm\"))"
+    },
+    {
+      "type": "count",
+      "name": "a2:count"
+    }
+  ],
+  "postAggregations": [
+    {
+      "type": "arithmetic",
+      "name": "a2",
+      "fn": "quotient",
+      "fields": [
+        {
+          "type": "fieldAccess",
+          "name": null,
+          "fieldName": "a2:sum"
+        },
+        {
+          "type": "fieldAccess",
+          "name": null,
+          "fieldName": "a2:count"
+        }
+      ],
+      "ordering": null
+    },
+    {
+      "type": "expression",
+      "name": "p0",
+      "expression": "(\"a0\" / 60000)",
+      "ordering": null
+    },
+    {
+      "type": "expression",
+      "name": "p1",
+      "expression": "(\"a1\" / 60000)",
+      "ordering": null
+    },
+    {
+      "type": "expression",
+      "name": "p2",
+      "expression": "(\"a2\" / 60000)",
+      "ordering": null
+    }
+  ],
+  "context": {"skipEmptyBuckets": true}
+}
