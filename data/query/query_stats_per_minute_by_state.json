@@ -1,0 +1,114 @@
+{
+  "queryType": "topN",
+  "dataSource": {
+    "type": "table",
+    "name": "NFIRS_General_Incident_Information_Spark"
+  },
+  "virtualColumns": [],
+  "dimension": {
+    "type": "default",
+    "dimension": "state",
+    "outputName": "d0",
+    "outputType": "STRING"
+  },
+  "metric": {
+    "type": "dimension",
+    "previousStop": null,
+    "ordering": {
+      "type": "lexicographic"
+    }
+  },
+  "threshold": 10,
+  "intervals": {
+    "type": "intervals",
+    "intervals": [
+      "-146136543-09-08T08:23:32.096Z/146140482-04-24T15:36:27.903Z"
+    ]
+  },
+  "filter": {
+    "type": "and",
+    "fields": [
+      {
+        "type": "expression",
+        "expression": "(timestamp_parse(\"inc_cont\") < 1420070400000)"
+      },
+      {
+        "type": "expression",
+        "expression": "(timestamp_parse(\"inc_cont\") >= 1230768000000)"
+      },
+      {
+        "type": "expression",
+        "expression": "((timestamp_parse(\"inc_cont\") - timestamp_parse(\"alarm\")) > 0)"
+      },
+      {
+        "type": "not",
+        "field": {
+          "type": "selector",
+          "dimension": "alarm",
+          "value": null,
+          "extractionFn": null
+        }
+      },
+      {
+        "type": "not",
+        "field": {
+          "type": "selector",
+          "dimension": "inc_cont",
+          "value": null,
+          "extractionFn": null
+        }
+      }
+    ]
+  },
+  "granularity": {
+    "type": "all"
+  },
+  "aggregations": [
+    {
+      "type": "longSum",
+      "name": "a0",
+      "fieldName": "prop_loss",
+      "expression": null
+    },
+    {
+      "type": "longSum",
+      "name": "a1",
+      "fieldName": null,
+      "expression": "(timestamp_parse(\"inc_cont\") - (timestamp_parse(\"alarm\") / 60000))"
+    },
+    {
+      "type": "longSum",
+      "name": "a2",
+      "fieldName": "ff_death",
+      "expression": null
+    },
+    {
+      "type": "longSum",
+      "name": "a3",
+      "fieldName": "oth_death",
+      "expression": null
+    }
+  ],
+  "postAggregations": [
+    {
+      "type": "expression",
+      "name": "p0",
+      "expression": "(\"a0\" / \"a1\")",
+      "ordering": null
+    },
+    {
+      "type": "expression",
+      "name": "p1",
+      "expression": "(\"a2\" / \"a1\")",
+      "ordering": null
+    },
+    {
+      "type": "expression",
+      "name": "p2",
+      "expression": "(\"a3\" / \"a1\")",
+      "ordering": null
+    }
+  ],
+  "context": {},
+  "descending": false
+}
