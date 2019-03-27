@@ -362,8 +362,13 @@
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_busiest_dept.json http://localhost:8082/druid/v2?pretty`
 - Which state(s) had the most Fire Service Deaths each year?  
    - Group by state, count fire service deaths (`state`,`ff_death`)  
-   - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year.json http://localhost:8082/druid/v2?pretty`
+   - `select state, floor(__time to year), sum(ff_death) from "NFIRS_General_Incident_Information_Spark" group by state, floor(__time to year) order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2009.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2010.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2011.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2012.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2013.json http://localhost:8082/druid/v2?pretty`  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2014.json http://localhost:8082/druid/v2?pretty`  
 - Which incident type is most common in each state? Least common?  
    - Group by state and incident type, get min and max count (`state`,`inc_type`)  
    - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **similar problem as last query, but can't solve with timespans**  
@@ -392,12 +397,15 @@
    - Check for arson factor and closed status and count (Arson file, `fdid`,`case_stat`)
 - Which are the top 5 fire departments that didn’t report property loss (had the most null values in that column)?  
    - Group by fire departments, count nulls (`fdid`,`prop_loss`)
+   - `select fdid from "NFIRS_General_Incident_Information_Spark" where prop_loss is null;` returns 0 rows - probably because that's how column family databases work  
 
 ## 3.1.3.3 Challenging Questions
 - What is average property damage, fire service deaths, and civilian deaths per minute between when the fire alarm was sounded and when the fire was contained for each state?  
    - Group by state (`state`)
    - Get number of minutes between sounded and contained (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
-   - Get sums of relevent columns and divide by sum of minutes (`prop_loss`,`ff_death`,`oth_death`,`alarm`, maybe `alarm_unparsed`, `inc_cont`)
+   - Get sums of relevent columns and divide by sum of minutes (`prop_loss`,`ff_death`,`oth_death`,`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
+   - `select state, [post aggregations?]  from "NFIRS_General_Incident_Information_Spark" group by state;`
+   
 - What is the most common Emergency Medical Services treatment for each type of incident?  
    - Group by EMS treatment (additional file) and incident type. Get max count (EMS file; `inc_type` by join to general by `inc_no`; `proc_use1`,`proc_use2`,`proc_use3`...`proc_use25` - these are like checkboxes, either filled with their number or nothing)
 
