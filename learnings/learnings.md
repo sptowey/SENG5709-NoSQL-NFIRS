@@ -2,6 +2,8 @@
 ## Data Sets
 The more we investigated the data sets, the more we realized that fields we expected to be unique id's were not. For example, `fdid` (Fire Department Id) is unique per state, but not accross the data set. `inc_no` (Incident Number) are frequently repeated, so might be only unique per `fdid`, but it's hard to tell for sure.
 
+Some of the entries were clearly done by hand, and didn't make any sense. This was most relevent when querying time between alarm and contained, where there was one incident contained in the year 3010 (probably a fat finger of 2010!), and some incidents where the fire was contained before it was started!
+
 ## Attempts
 Tried to use metrics on acres_burn as longSum, but didn't create a metric as a sum.  Essentially a dimension was created.
 
