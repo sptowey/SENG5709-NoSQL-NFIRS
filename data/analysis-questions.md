@@ -410,7 +410,14 @@
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_total_civilian_deaths.json http://localhost:8082/druid/v2?pretty`   
    
 - How many arson cases are still open for each fire department?  
-   - Check for arson factor and closed status and count (Arson file, `fdid`,`case_stat`)
+   - 1 Investigation Open  
+   - 2 Investigation Closed  
+   - 3 Investigation Inactive  
+   - 4 Investigation closed with arrest  
+   - 5 Closed with exceptional clearance  
+   - Check for arson factor and closed status and count (Arson file - `fdid`,`case_stat`; Fire Depts `fd_name`, `state`)
+   - `select state, fdid, count(*) from "NFIRS_General_Incident_Information_Spark" where case_stat = 1 group by state, fdid limit 10;
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_open_arson_by_fdid_and_state.json http://localhost:8082/druid/v2?pretty`
 - Which are the top 5 fire departments that didn’t report property loss (had the most null values in that column)?  
    - Group by fire departments, count nulls (`fdid`,`prop_loss`)
    - `select fdid from "NFIRS_General_Incident_Information_Spark" where prop_loss is null;` returns 0 rows - probably because that's how column family databases work  
@@ -437,7 +444,9 @@
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_stats_per_minute_by_state.json http://localhost:8082/druid/v2?pretty`
    
 - What is the most common Emergency Medical Services treatment for each type of incident?  
-   - Group by EMS treatment (additional file) and incident type. Get max count (EMS file; `inc_type` by join to general by `inc_no`; `proc_use1`,`proc_use2`,`proc_use3`...`proc_use25` - these are like checkboxes, either filled with their number or nothing)
+   - Group by EMS treatment (additional file) and incident type. Get max count (EMS file; `inc_type` by join to general by `inc_no`; `proc_use1`,`proc_use2`,`proc_use3`...`proc_use25` - these are like checkboxes, either filled with their number or nothing)  
+   - `select * from "NFIRS_EMS" group by inc_type;  
+   - TBD might not be possible
 
 ## 3.1.3.4 Challenging Questions with Cross-Referenced Data
 These questions are unable to be answered with the dataset available. However, they could be answered by analyzing results through the lens of our intuition, or additional datasets could be located to find the supporting data required. These advanced scenarios will be addressed only if time allows.  
