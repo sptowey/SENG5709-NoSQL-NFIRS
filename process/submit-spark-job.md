@@ -25,7 +25,7 @@ mkdir nfirs
 
 8. Once the job has completed, the exported csv files will show up in the ~/sparkNfirs/combinedIncidentsAllYears directory. To zip the files so they can be copied to be ingested into Druid, run the following command from the ~/sparkNfirs directory
 
-```zip -r combinedArsonsAllYears.zip combinedIncidentsAllYears```
+```zip -r combinedIncidentsAllYears.zip combinedIncidentsAllYears```
 
 9. From the user's home directory run the following command to submit the Arsons Spark job:
 
