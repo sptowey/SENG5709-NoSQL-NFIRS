@@ -1,0 +1,37 @@
+select inc_type,
+max(
+count(proc_use1), 
+count(proc_use2), 
+count(proc_use3), 
+count(proc_use4), 
+count(proc_use5), 
+count(proc_use6), 
+count(proc_use7), 
+count(proc_use8), 
+count(proc_use9), 
+count(proc_use10),
+count(proc_use11),
+count(proc_use12),
+count(proc_use13),
+count(proc_use14),
+count(proc_use15),
+count(proc_use16),
+count(proc_use17),
+count(proc_use18),
+count(proc_use19),
+count(proc_use20),
+count(proc_use21),
+count(proc_use22),
+count(proc_use23),
+count(proc_use24),
+count(proc_use25)
+)
+from "NFIRS_EMS" group by inc_type order by inc_type;
+
+
+--^^ need to pull out the max count for each inc_type
+--max(counts) gets the max, but doesn't tell us which column
+
+
+--maybe?
+--sum(CASE WHEN proc_use1 is not null THEN 1 ELSE 0)

@@ -1,0 +1,39 @@
+{
+  "type": "index",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "NFIRS_Arson",
+      "parser": {
+        "type": "string",
+        "parseSpec": {
+          "format": "csv",
+          "timestampSpec": {
+            "column": "inc_date",
+            "format": "auto"
+          },
+          "hasHeaderRow": true,
+          "dimensionsSpec": {
+            "dimensions": [
+              { "name": "state"},
+              { "name": "fdid"},
+              { "name": "case_stat", "type": "long" }
+            ]
+          }
+        }
+      },
+      "metricsSpec": [],
+      "granularitySpec": {
+        "type": "uniform"
+      },
+      "transformSpec": null
+    },
+    "ioConfig": {
+      "type": "index",
+      "firehose": {
+        "type": "local",
+        "filter": "*.csv",
+        "baseDir": "/home/towey016/FIXME/"
+      }
+    }
+  }
+}
