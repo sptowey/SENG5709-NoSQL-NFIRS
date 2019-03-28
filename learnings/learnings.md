@@ -1,4 +1,7 @@
 # 1. Learnings
+## Data Sets
+The more we investigated the data sets, the more we realized that fields we expected to be unique id's were not. For example, `fdid` (Fire Department Id) is unique per state, but not accross the data set. `inc_no` (Incident Number) are frequently repeated, so might be only unique per `fdid`, but it's hard to tell for sure.
+
 ## Attempts
 Tried to use metrics on acres_burn as longSum, but didn't create a metric as a sum.  Essentially a dimension was created.
 
