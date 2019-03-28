@@ -34,3 +34,11 @@ mkdir nfirs
 10. Once the job has completed, the exported csv files will show up in the ~/sparkNfirs/combinedArsonsAllYears directory. To zip the files so they can be copied to be ingested into Druid, run the following command from the ~/sparkNfirs directory
 
 ```zip -r combinedArsonsAllYears.zip combinedArsonsAllYears```
+
+9. From the user's home directory run the following command to submit the EMS Spark job:
+
+```spark-2.4.0-bin-hadoop2.7/bin/spark-submit --class SparkLoadAndTransformEms --master local nfirs-build/target/scala-2.11/nfirs_2.11-0.1-SNAPSHOT.jar ""```
+
+10. Once the job has completed, the exported csv files will show up in the ~/sparkNfirs/combinedEmsAllYears directory. To zip the files so they can be copied to be ingested into Druid, run the following command from the ~/sparkNfirs directory
+
+```zip -r combinedEmsAllYears.zip combinedEmsAllYears```
