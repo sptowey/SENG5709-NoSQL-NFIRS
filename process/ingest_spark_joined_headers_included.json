@@ -1,0 +1,48 @@
+{
+  "type": "index",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "NFIRS_General_Incident_Information_Spark_Full",
+      "parser": {
+        "type": "string",
+        "parseSpec": {
+          "format": "csv",
+          "timestampSpec": {
+            "column": "inc_date",
+            "format": "auto"
+          },
+          "hasHeaderRow": true,
+          "dimensionsSpec": {
+            "dimensions": [
+              "state",
+              { "name": "fdid"},
+              { "name": "fd_name"},
+              { "name": "inc_no" },
+              { "name": "inc_type" },
+              { "name": "alarm" },
+              { "name": "arrival" },
+              { "name": "inc_cont" },
+              { "name": "prop_loss", "type": "long" },
+              { "name": "prop_val", "type": "long" },
+              { "name": "ff_death", "type": "long" },
+              { "name": "oth_death", "type": "long" }
+            ]
+          }
+        }
+      },
+      "metricsSpec": [],
+      "granularitySpec": {
+        "type": "uniform"
+      },
+      "transformSpec": null
+    },
+    "ioConfig": {
+      "type": "index",
+      "firehose": {
+        "type": "local",
+        "filter": "*.csv",
+        "baseDir": "/home/towey016/combined/"
+      }
+    }
+  }
+}
