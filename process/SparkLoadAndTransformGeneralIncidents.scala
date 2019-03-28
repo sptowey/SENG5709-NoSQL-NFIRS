@@ -4,7 +4,7 @@ import org.apache.spark.sql.DataFrame;
 import org.apache.spark;
 import org.apache.spark.sql.functions._
  
- object SparkLoadAndTransform extends Serializable {
+ object SparkLoadAndTransformGeneralIncidents extends Serializable {
     
     def loadGeneralIncidentDfFromCsv(sqlContext: SQLContext, generalIncidentsFilePath: String, fireDepartmentsFilePath: String) : DataFrame = {       
         val generalIncidents = sqlContext.read.format("csv").option("header","true").option("inferSchema", "true").load(generalIncidentsFilePath)
