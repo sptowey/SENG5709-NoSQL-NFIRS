@@ -434,7 +434,7 @@
 `and prop_loss is not null and prop_loss > 0`  
 `group by state;`  
    - Deaths are too low to show on a per minute scale (and that's a good thing!)
-   - `curl -X 'POST' -H 'Content-Type:application/jso-d @query_stats_per_minute_by_state.json http://localhost:8082/druid/v2?pretty`
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_stats_per_minute_by_state.json http://localhost:8082/druid/v2?pretty`
    
 - What is the most common Emergency Medical Services treatment for each type of incident?  
    - Group by EMS treatment (additional file) and incident type. Get max count (EMS file; `inc_type` by join to general by `inc_no`; `proc_use1`,`proc_use2`,`proc_use3`...`proc_use25` - these are like checkboxes, either filled with their number or nothing)
