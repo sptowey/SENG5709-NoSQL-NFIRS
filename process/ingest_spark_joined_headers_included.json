@@ -1,0 +1,73 @@
+{
+  "type": "index",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "NFIRS_General_Incident_Information_Spark_Full",
+      "parser": {
+        "type": "string",
+        "parseSpec": {
+          "format": "csv",
+          "timestampSpec": {
+            "column": "inc_date",
+            "format": "auto"
+          },
+          "hasHeaderRow": true,
+          "dimensionsSpec": {
+            "dimensions": [
+              "state",
+              { "name": "fdid"},
+              { "name": "fd_name"},
+              { "name": "inc_no" },
+              { "name": "inc_type" },
+              { "name": "alarm" },
+              { "name": "arrival" },
+              { "name": "inc_cont" },
+              { "name": "prop_loss", "type": "long" },
+              { "name": "prop_val", "type": "long" },
+              { "name": "ff_death", "type": "long" },
+              { "name": "oth_death", "type": "long" },
+              { "name": "proc_use1" },
+              { "name": "proc_use2" },
+              { "name": "proc_use3" },
+              { "name": "proc_use4" },
+              { "name": "proc_use5" },
+              { "name": "proc_use6" },
+              { "name": "proc_use7" },
+              { "name": "proc_use8" },
+              { "name": "proc_use9" },
+              { "name": "proc_use10" },
+              { "name": "proc_use11" },
+              { "name": "proc_use12" },
+              { "name": "proc_use13" },
+              { "name": "proc_use14" },
+              { "name": "proc_use15" },
+              { "name": "proc_use16" },
+              { "name": "proc_use17" },
+              { "name": "proc_use18" },
+              { "name": "proc_use19" },
+              { "name": "proc_use20" },
+              { "name": "proc_use21" },
+              { "name": "proc_use22" },
+              { "name": "proc_use23" },
+              { "name": "proc_use24" },
+              { "name": "proc_use25" }
+            ]
+          }
+        }
+      },
+      "metricsSpec": [],
+      "granularitySpec": {
+        "type": "uniform"
+      },
+      "transformSpec": null
+    },
+    "ioConfig": {
+      "type": "index",
+      "firehose": {
+        "type": "local",
+        "filter": "*.csv",
+        "baseDir": "/home/towey016/combined/"
+      }
+    }
+  }
+}
