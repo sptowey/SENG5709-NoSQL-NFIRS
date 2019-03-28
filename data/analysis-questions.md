@@ -416,8 +416,10 @@
    - 4 Investigation closed with arrest  
    - 5 Closed with exceptional clearance  
    - Check for arson factor and closed status and count (Arson file - `fdid`,`case_stat`; Fire Depts `fd_name`, `state`)
-   - `select state, fdid, count(*) from "NFIRS_General_Incident_Information_Spark" where case_stat = 1 group by state, fdid limit 10;
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_open_arson_by_fdid_and_state.json http://localhost:8082/druid/v2?pretty`
+   - `select state, fdid, fd_name count(*) from "NFIRS_General_Incident_Information_Spark" where case_stat = 1 group by state, fdid, fd_name limit 10;  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_open_arson_by_fdid_and_state.json http://localhost:8082/druid/v2?pretty`  
+   - `select state, fdid, count(*) from "NFIRS_Arson" where case_stat = 1 group by state, fdid order by count(*) desc limit 10;`
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_open_arson_by_fdid_and_state_arson_only.json http://localhost:8082/druid/v2?pretty`
 - Which are the top 5 fire departments that didn’t report property loss (had the most null values in that column)?  
    - Group by fire departments, count nulls (`fdid`,`prop_loss`)
    - `select fdid from "NFIRS_General_Incident_Information_Spark" where prop_loss is null;` returns 0 rows - probably because that's how column family databases work  
