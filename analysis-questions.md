@@ -2,18 +2,18 @@
 The queries should be run from the `~/SENG5709-NoSQL-NFIRS/data/query/ directory.` The queries can be run on the host machine using the shown `localhost` or can be run against the public IP `40.122.132.135`.  
 This document may be messy or incomplete because it is a living document showing the thought process behind the queries. Additionally, many of the JSON query results are not shown, because they mirror the DSQL results.
 ## 3.1.3.1 Easy Questions
-- What are the min, max, and average Fire Service Deaths  
+### What are the min, max, and average Fire Service Deaths  
    - `select min(ff_death), max(ff_death), avg(ff_death) from "NFIRS_General_Incident_Information";`
    - `-1, 5, 0`  
    - `select min(ff_death), max(ff_death), avg(cast(ff_death as double)) from "NFIRS_General_Incident_Information";`
    - `??? query error` 
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_ff_death.json http://localhost:8082/druid/v2?pretty`
-- How many different incident types are there  
+### How many different incident types are there  
    - Aggregate over indident types (`inc_type`)  
    - `select count(distinct inc_type) from "NFIRS_General_Incident_Information";`  
    - `74`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_count_incident_types.json http://localhost:8082/druid/v2?pretty`
-- Were fire incidents reported in all 50 states each year?  
+### Were fire incidents reported in all 50 states each year?  
    - Count distinct states (`state`)
    - `select count(distinct state) from "NFIRS_General_Incident_Information";`  
    - `55`
@@ -25,7 +25,7 @@ This document may be messy or incomplete because it is a living document showing
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2012.json http://localhost:8082/druid/v2?pretty` 53  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2013.json http://localhost:8082/druid/v2?pretty` 52  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_all50_2014.json http://localhost:8082/druid/v2?pretty` 53  
-- What is the min, max and average time between the time the alarm was sounded and the fire was controlled.  
+### What is the min, max and average time between the time the alarm was sounded and the fire was controlled.  
    - Aggregate over difference between columns (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
    - `select` 
 `min(TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)))/(1000*60),`  
@@ -44,7 +44,7 @@ This document may be messy or incomplete because it is a living document showing
   
 
 ## 3.1.3.2 Moderately Difficult Questions
-- How many fires were there in each state per year?  
+### How many fires were there in each state per year?  
    - Group by State, count (`state`)  
    - `select state, TIME_EXTRACT(__time, 'YEAR'), count(*) from "NFIRS_General_Incident_Information" group by state, TIME_EXTRACT(__time, 'YEAR') order by state, TIME_EXTRACT(__time, 'YEAR');`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_fires_per_state_per_year_old.json http://localhost:8082/druid/v2?pretty` - TODO - years are formatted as longs  
@@ -364,7 +364,7 @@ This document may be messy or incomplete because it is a living document showing
 |WY|2012|3914|
 |WY|2014|2649|
 
-- Which fire department responded to the most incidents? Least?  
+### Which fire department responded to the most incidents? Least?  
    - Group by fire department id, get min and max count (`fdid`)  - **need to rerun after re-import fdid as string**  
    - Get fire department name from Fire Departments table (different file)  - **redo and rerun after denormalizing**
    - `select fdid, count(fdid) from "NFIRS_General_Incident_Information" group by fdid order by count(fdid) limit 1;`  
@@ -375,7 +375,7 @@ This document may be messy or incomplete because it is a living document showing
    - `select state, fdid, count(*) from "NFIRS_General_Incident_Information" where fdid <> 0 group by (state, fdid) order by count(*) desc limit 1;`  
    - `NY, 24001, 424430`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_busiest_dept.json http://localhost:8082/druid/v2?pretty`
-- Which state(s) had the most Fire Service Deaths each year?  
+### Which state(s) had the most Fire Service Deaths each year?  
    - Group by state, count fire service deaths (`state`,`ff_death`)  
    - `select state, TIME_EXTRACT(__time, 'YEAR'), sum(ff_death) from "NFIRS_General_Incident_Information_Spark" group by state, TIME_EXTRACT(__time, 'YEAR') order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2009.json http://localhost:8082/druid/v2?pretty`  
@@ -388,7 +388,7 @@ This document may be messy or incomplete because it is a living document showing
    - Group by state and incident type, get min and max count (`state`,`inc_type`)  
    - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **similar problem as last query, but can't solve with timespans**  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_most_common_incident_per_state.json http://localhost:8082/druid/v2?pretty`
-- How many civilians were killed in fires each year? Total over all years?  
+### How many civilians were killed in fires each year? Total over all years?  
    - Aggregate civilian deaths by year, and count (`oth_death`)  
    - `select floor(__time to year), sum(oth_death) from "NFIRS_General_Incident_Information_Spark" group by floor(__time to year) order by floor(__time to year);`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_count_civilian_deaths_per_year.json http://localhost:8082/druid/v2?pretty` 
@@ -402,13 +402,13 @@ This document may be messy or incomplete because it is a living document showing
 |2012|1963|
 |2013|1943|
 |2014|2150|
-
+  
    - Count total  
    - `select sum(oth_death) from "NFIRS_General_Incident_Information";`  
    - `12130`  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_total_civilian_deaths.json http://localhost:8082/druid/v2?pretty`   
    
-- How many arson cases are still open for each fire department?  
+### How many arson cases are still open for each fire department?  
    - 1 Investigation Open  
    - 2 Investigation Closed  
    - 3 Investigation Inactive  
@@ -424,7 +424,7 @@ This document may be messy or incomplete because it is a living document showing
    - `select fdid from "NFIRS_General_Incident_Information_Spark" where prop_loss is null;` returns 0 rows - probably because that's how column family databases work  
 
 ## 3.1.3.3 Challenging Questions
-- What is average property damage, fire service deaths, and civilian deaths per minute between when the fire alarm was sounded and when the fire was contained for each state?  
+### What is average property damage, fire service deaths, and civilian deaths per minute between when the fire alarm was sounded and when the fire was contained for each state?  
    - Group by state (`state`)
    - Get number of minutes between sounded and contained (`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
    - Get sums of relevent columns and divide by sum of minutes (`prop_loss`,`ff_death`,`oth_death`,`alarm`, maybe `alarm_unparsed`, `inc_cont`)  
@@ -444,7 +444,7 @@ This document may be messy or incomplete because it is a living document showing
    - Deaths are too low to show on a per minute scale (and that's a good thing!)
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_stats_per_minute_by_state.json http://localhost:8082/druid/v2?pretty`
    
-- What is the most common Emergency Medical Services treatment for each type of incident?  
+### What is the most common Emergency Medical Services treatment for each type of incident?  
    - Group by EMS treatment (additional file) and incident type. Get max count (EMS file; `inc_type` by join to general by `inc_no`; `proc_use1`,`proc_use2`,`proc_use3`...`proc_use25` - these are like checkboxes, either filled with their number or nothing)  
    - `select * from "NFIRS_EMS" group by inc_type;  
    - TBD might not be possible
