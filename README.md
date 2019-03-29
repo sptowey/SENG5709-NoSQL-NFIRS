@@ -6,7 +6,7 @@ The POC we wanted to use Druid, Spark and Kafka.  Thus far we have successfully 
 The biggest frustration has been getting conistent data into Druid.  Depending on when or who does the ingestion the total number of rows is not constant. This cause a bit of angst as we unable to determine where the data went.  We have been as close as 20,000 record to as much as 5,000,000.  
 
 Druid is not for the faint of heart as the SQL interface, DSQL is very finiky. Then even more strange is the way to run queries using json files. The formatting and execution is very different. First the formatting is strange, not because it is json, but the way the statement needs to be constructed is not overly intuitive. Then using curl to execute the query makes understand where an error occured very difficult. 
-Once the data was ingested we started asking our [questions](https://github.com/sptowey/SENG5709-NoSQL-NFIRS/blob/master/data/analysis-questions.md)
+Once the data was ingested we started asking our [questions](https://github.com/sptowey/SENG5709-NoSQL-NFIRS/blob/master/analysis-questions.md)
 The SQL and the results are captured there. We also started porting all of the SQL queries to a json query, which are kept [here](https://github.com/sptowey/SENG5709-NoSQL-NFIRS/tree/master/data/query)
 
 The documentation for Druid even adds more angst as the examples are incomplete and often not very helpful. That is why we created a [learnings document](https://github.com/sptowey/SENG5709-NoSQL-NFIRS/blob/master/learnings.md) to capture all of the woes that we encountered. 
