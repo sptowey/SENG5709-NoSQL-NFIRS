@@ -1,0 +1,48 @@
+{
+  "type": "index",
+  "spec": {
+    "dataSchema": {
+      "dataSource": "NFIRS_General_Incident_Information_Spark",
+      "parser": {
+        "type": "string",
+        "parseSpec": {
+          "format": "csv",
+          "timestampSpec": {
+            "column": "inc_date",
+            "format": "auto"
+          },
+          "hasHeaderRow": false,
+          "columns":["state","fdid","inc_date","inc_no","exp_no","version","dept_sta","inc_type","add_wild","aid","alarm","arrival","inc_cont","lu_clear","shift","alarms","district","act_tak1","act_tak2","act_tak3","app_mod","sup_app","ems_app","oth_app","sup_per","ems_per","oth_per","resou_aid","prop_loss","cont_loss","prop_val","cont_val","ff_death","oth_death","ff_inj","oth_inj","det_alert","haz_rel","mixed_use","prop_use","census"],
+          "dimensionsSpec": {
+            "dimensions": [
+              "state",
+              { "name": "fdid"},
+              { "name": "inc_no" },
+              { "name": "inc_type" },
+              { "name": "alarm" },
+              { "name": "arrival" },
+              { "name": "inc_cont" },
+              { "name": "prop_loss", "type": "long" },
+              { "name": "prop_val", "type": "long" },
+              { "name": "ff_death", "type": "long" },
+              { "name": "oth_death", "type": "long" }
+            ]
+          }
+        }
+      },
+      "metricsSpec": [],
+      "granularitySpec": {
+        "type": "uniform"
+      },
+      "transformSpec": null
+    },
+    "ioConfig": {
+      "type": "index",
+      "firehose": {
+        "type": "local",
+        "filter": "*.csv",
+        "baseDir": "/home/towey016/combined/"
+      }
+    }
+  }
+}
