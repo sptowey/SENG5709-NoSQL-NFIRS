@@ -1,5 +1,5 @@
 # 3.1.3 Analytical Questions
-The queries should be run from the ~/SENG5709-NoSQL-NFIRS/data/query/ directory.  
+The queries should be run from the `~/SENG5709-NoSQL-NFIRS/data/query/ directory.` The queries can be run on the host machine using the shown `localhost` or can be run against the public IP `40.122.132.135`.  
 This document may be messy or incomplete because it is a living document showing the thought process behind the queries. Additionally, many of the JSON query results are not shown, because they mirror the DSQL results.
 ## 3.1.3.1 Easy Questions
 - What are the min, max, and average Fire Service Deaths  
