@@ -47,8 +47,8 @@ This document may be messy or incomplete because it is a living document showing
 ### How many fires were there in each state per year?  
    - Group by State, count (`state`)  
    - `select state, TIME_EXTRACT(__time, 'YEAR'), count(*) from "NFIRS_General_Incident_Information" group by state, TIME_EXTRACT(__time, 'YEAR') order by state, TIME_EXTRACT(__time, 'YEAR');`  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_fires_per_state_per_year_old.json http://localhost:8082/druid/v2?pretty` - TODO - years are formatted as longs  
-
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_fires_per_state_per_year_old.json http://localhost:8082/druid/v2?pretty`  
+   
 |state|year|count|
 |-----|----|-----|
 |  |2009|359|
@@ -378,16 +378,25 @@ This document may be messy or incomplete because it is a living document showing
 ### Which state(s) had the most Fire Service Deaths each year?  
    - Group by state, count fire service deaths (`state`,`ff_death`)  
    - `select state, TIME_EXTRACT(__time, 'YEAR'), sum(ff_death) from "NFIRS_General_Incident_Information_Spark" group by state, TIME_EXTRACT(__time, 'YEAR') order by sum(ff_death) desc limit 6;` **not quite right, gives top 6 deadliest, not 1 for each year - solve with timespans**  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2009.json http://localhost:8082/druid/v2?pretty`  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2010.json http://localhost:8082/druid/v2?pretty`  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2011.json http://localhost:8082/druid/v2?pretty`  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2012.json http://localhost:8082/druid/v2?pretty`  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2013.json http://localhost:8082/druid/v2?pretty`  
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2014.json http://localhost:8082/druid/v2?pretty`  
-- Which incident type is most common in each state? Least common?  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2009.json http://localhost:8082/druid/v2?pretty` NJ/3  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2010.json http://localhost:8082/druid/v2?pretty` IL/6   
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2011.json http://localhost:8082/druid/v2?pretty` FL/2  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2012.json http://localhost:8082/druid/v2?pretty` PA/4  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2013.json http://localhost:8082/druid/v2?pretty` TX/11  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_deadliest_state_per_year_2014.json http://localhost:8082/druid/v2?pretty` NJ/5 
+### Which incident type is most common in each state? Least common?  
    - Group by state and incident type, get min and max count (`state`,`inc_type`)  
-   - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information" group by state, inc_type order by count(*) desc limit 5;`  **similar problem as last query, but can't solve with timespans**  
+   - `select state, inc_type, count(*) from "NFIRS_General_Incident_Information_Spark" group by state, inc_type order by count(*) desc limit 5;`  **similar problem as last query, but can't solve with timespans**  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_most_common_incident_per_state.json http://localhost:8082/druid/v2?pretty`
+   
+| state | inc_type | count  |
+|-------|----------|--------|
+| NY    | 412      | 148189 |
+| NY    | 113      | 122422 |
+| OH    | 111      | 120156 |
+| TX    | 111      | 112910 |
+| TX    | 143      | 101437 |
+   
 ### How many civilians were killed in fires each year? Total over all years?  
    - Aggregate civilian deaths by year, and count (`oth_death`)  
    - `select floor(__time to year), sum(oth_death) from "NFIRS_General_Incident_Information_Spark" group by floor(__time to year) order by floor(__time to year);`  
@@ -418,10 +427,28 @@ This document may be messy or incomplete because it is a living document showing
    - `select state, fdid, fd_name count(*) from "NFIRS_General_Incident_Information_Spark" where case_stat = 1 group by state, fdid, fd_name limit 10;  
    - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_open_arson_by_fdid_and_state.json http://localhost:8082/druid/v2?pretty`  
    - `select state, fdid, count(*) from "NFIRS_Arson" where case_stat = 1 group by state, fdid order by count(*) desc limit 10;`
-   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_open_arson_by_fdid_and_state_arson_only.json http://localhost:8082/druid/v2?pretty`
-- Which are the top 5 fire departments that didn’t report property loss (had the most null values in that column)?  
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_open_arson_by_fdid_and_state_arson_only.json http://localhost:8082/druid/v2?pretty`  
+   - Result abbreviated for space constranints (4502 rows)
+   
+| state | fdid  | open |
+|-------|-------|--------|
+| TX    | DH807 |    867 |
+| OH    | 50043 |    666 |
+| MN    | 27218 |    477 |
+| OK    | 72009 |    438 |
+| FL    | 03051 |    390 |
+| MA    | 13281 |    294 |
+| TX    | KA664 |    284 |
+| NC    | 04110 |    262 |
+| NE    | 01005 |    237 |
+| IL    | WG221 |    235 |
+
+
+
+### Which are the top 5 fire departments that didn’t report property loss (had the most null values in that column)?  
    - Group by fire departments, count nulls (`fdid`,`prop_loss`)
-   - `select fdid from "NFIRS_General_Incident_Information_Spark" where prop_loss is null;` returns 0 rows - probably because that's how column family databases work  
+   - `select fdid from "NFIRS_General_Incident_Information_Spark" where prop_loss is null;`  
+   - returns 0 rows - probably because that's how column family databases work  
 
 ## 3.1.3.3 Challenging Questions
 ### What is average property damage, fire service deaths, and civilian deaths per minute between when the fire alarm was sounded and when the fire was contained for each state?  
