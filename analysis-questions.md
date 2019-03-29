@@ -36,7 +36,7 @@ This document may be messy or incomplete because it is a living document showing
 `and TIMESTAMP_TO_MILLIS(TIME_PARSE(inc_cont))-TIMESTAMP_TO_MILLIS(TIME_PARSE(alarm)) > 0`  
 `limit 10;`  
    - This query was hard because the data was so messy. The query required many filters to make sense. Also converted from milliseconds to minutes  
-   - `curl -X 'POST' -H 'Content-Type:application/jso-d @query_time_to_control.json http://localhost:8082/druid/v2?pretty`
+   - `curl -X 'POST' -H 'Content-Type:application/json' -d @query_time_to_control.json http://localhost:8082/druid/v2?pretty`
 
 |min|max|avg|
 |---|---|---|
