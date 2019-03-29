@@ -19,6 +19,6 @@
      - Rename the files as `<File>-PadNew.csv`  
 # 4. Ingest data with json ingestion script
    - Ingest 2009-2011  
-     - `<druid bin>/post-index-task -f ~/ingest_padded_9-11.json`  
+     - `<druid bin>/post-index-task -f ~/SENG5709-NoSQL-NFIRS/process/ingest/ingest_padded_9-11.json`  
    - Ingest 2012-2014  
-     - `<druid bin>/post-index-task -f ~/ingest_padded_12-14.json`  
+     - `<druid bin>/post-index-task -f ~/SENG5709-NoSQL-NFIRS/process/ingest/ingest_padded_12-14.json`  
