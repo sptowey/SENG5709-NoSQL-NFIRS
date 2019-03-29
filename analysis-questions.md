@@ -1,7 +1,8 @@
 # 3.1.3 Analytical Questions
+The queries should be run from the ~/SENG5709-NoSQL-NFIRS/data/query/ directory.  
+This document may be messy or incomplete because it is a living document showing the thought process behind the queries. Additionally, many of the JSON query results are not shown, because they mirror the DSQL results.
 ## 3.1.3.1 Easy Questions
 - What are the min, max, and average Fire Service Deaths  
-   - Query Fire Service Deaths columnn (`ff_death`)  
    - `select min(ff_death), max(ff_death), avg(ff_death) from "NFIRS_General_Incident_Information";`
    - `-1, 5, 0`  
    - `select min(ff_death), max(ff_death), avg(cast(ff_death as double)) from "NFIRS_General_Incident_Information";`
@@ -40,9 +41,7 @@
 |min|max|avg|
 |---|---|---|
 |1|527128|59|
-   
-   
-   
+  
 
 ## 3.1.3.2 Moderately Difficult Questions
 - How many fires were there in each state per year?  
