@@ -1,4 +1,4 @@
-Adapted from Medium's Intalling Scala and Spark article (https://medium.com/@josemarcialportilla/installing-scala-and-spark-on-ubuntu-5665ee4b62b1) and sbt documentation (https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
+Adapted from Medium's [Intalling Scala and Spark](https://medium.com/@josemarcialportilla/installing-scala-and-spark-on-ubuntu-5665ee4b62b1) article and [sbt documentation](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
 
 *All commands should be run from the user's home directory.
 
