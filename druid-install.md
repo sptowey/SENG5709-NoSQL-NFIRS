@@ -1,7 +1,7 @@
 Adapted from Druid's [Getting started](http://druid.io/docs/latest/tutorials/index.html) instructions
 
 1. Create Ubuntu 18.04 VM (Azure Standard D2s v3 (2 vcpus, 8 GB memory))
-2. Install Java (needs Java 8, this installed Java 10)
+2. Install Java
    ```
    sudo add-apt-repository ppa:webupd8team/java
    sudo apt-get update
